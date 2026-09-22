@@ -146,35 +146,35 @@ body {
   pointer-events: none;
 }
 
+/* Le medaillon, et rien d autre.
+   Un rond de trente-six pixels pose au bout d une branche : c est tout ce qui
+   s affiche sur l arbre. Le nom est dans l attribut title du bouton, donc dans
+   l infobulle et dans un lecteur d ecran, et il s ouvre en entier dans la
+   fiche au premier toucher. */
 .plaque {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 5px 10px 5px 5px;
-  border: 1px solid var(--bordure);
-  border-radius: var(--rayon);
-  background: linear-gradient(var(--pl-a), var(--pl-b));
-  color: var(--pl-fg);
-  font-family: inherit;
-  text-align: left;
-  white-space: nowrap;
+  display: block;
+  padding: 0;
+  border: 2px solid var(--pl-a);
+  border-radius: 50%;
+  background: var(--pl-b);
+  box-shadow: 0 1px 4px hsl(220 25% 12% / 0.35);
+  line-height: 0;
   pointer-events: auto;
   cursor: pointer;
-  transform: translateY(-50%);
+  transform: translate(-50%, -50%);
   transition: opacity 0.2s var(--courbe), border-color 0.15s var(--courbe),
-    background-color 0.15s var(--courbe);
+    box-shadow 0.15s var(--courbe);
 }
 
 .plaque:hover,
 .plaque:focus-visible {
   border-color: var(--ocean);
-  background: var(--surface);
   outline: none;
 }
 
 .plaque-choisie {
   border-color: var(--ocean);
-  box-shadow: 0 0 0 2px hsl(229 97% 55% / 0.26);
+  box-shadow: 0 0 0 3px hsl(229 97% 55% / 0.34), 0 1px 4px hsl(220 25% 12% / 0.35);
 }
 
 /* Le quinconce des enfants : un frere plus haut, le suivant plus bas, pour
@@ -185,68 +185,38 @@ body {
    effet, ce qui a ete verifie sur le DOM rendu. La marge, elle, deplace la
    boite avant que ce transform ne s applique, et s additionne bel et bien. */
 .plaque-decalee-haut {
-  margin: -48px 0 0 40px;
+  margin: -14px 0 0 12px;
 }
 
 .plaque-decalee-bas {
-  margin: 48px 0 0 -40px;
+  margin: 14px 0 0 -12px;
 }
 
-/* Le medaillon. Le rond est fait au bord arrondi et le cadrage par
-   object-fit : l image arrive deja rognee sur le visage a 192 pixels de cote,
-   donc carree, et ce rond n a rien a redresser. */
 .plaque-visage {
-  flex: none;
-  width: 34px;
-  height: 34px;
+  display: block;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
+  /* L image arrive deja rognee sur le visage et carree : ce rond n a rien a
+     redresser, il ne fait que couper les coins. */
   object-fit: cover;
-  background: var(--pl-b);
-}
-
-.plaque-textes {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  min-width: 0;
 }
 
 /* La souche porte le sien plus grand : c est la tete de la famille. */
 .plaque-0 .plaque-visage {
-  width: 44px;
-  height: 44px;
+  width: 52px;
+  height: 52px;
 }
 
+/* La troisieme generation plus petite : c est elle qui est la plus nombreuse,
+   quatorze visages, et c est la taille qui dit la generation. */
 .plaque-2 .plaque-visage {
   width: 26px;
   height: 26px;
 }
 
-.plaque-nom {
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 1.2;
-}
-
-.plaque-annees,
-.plaque-union {
-  color: var(--gris);
-  font-size: 11px;
-  line-height: 1.25;
-}
-
-/* La souche porte son nom plus gros : c est la tete de la famille. */
-.plaque-0 .plaque-nom {
-  font-size: 17px;
-}
-
 .plaque-2 {
-  padding: 4px 8px;
-  background: var(--pl-b);
-}
-
-.plaque-2 .plaque-nom {
-  font-size: 12px;
+  border-width: 1.5px;
 }
 
 .plaque-effacee {
@@ -350,50 +320,28 @@ body {
     display: none;
   }
 
-  .plaque-2 {
-    display: none;
+  /* Sur trois cent quatre-vingt-dix pixels de large, les ronds se serrent :
+     on les reduit d un quart plutot que de cacher des gens. */
+  .plaque-visage {
+    width: 28px;
+    height: 28px;
   }
 
-  /* Sur un telephone l etiquette ne porte que le nom : les annees et l union
-     couvraient la couronne, et elles sont dans la fiche au premier toucher. */
-  .plaque {
-    padding: 3px 7px;
+  .plaque-0 .plaque-visage {
+    width: 40px;
+    height: 40px;
   }
 
-  .plaque-nom {
-    font-size: 12px;
+  .plaque-2 .plaque-visage {
+    width: 20px;
+    height: 20px;
   }
 
-  .plaque-0 .plaque-nom {
-    font-size: 14px;
-  }
-
-  .plaque-annees,
-  .plaque-union {
-    display: none;
-  }
-
-  /* Sur trois cent quatre-vingt-dix pixels de large, six noms cote a cote se
-     recouvrent quoi qu on fasse. Le medaillon, lui, tient : la troisieme
-     generation n est plus qu un visage, et le nom s ouvre au premier toucher
-     dans la fiche. */
-  .plaque-2 .plaque-textes {
-    display: none;
-  }
-
-  .plaque-2 {
-    padding: 3px;
-  }
-
-  /* Le quinconce garde son decalage en hauteur, qui sert toujours, et perd
-     celui de cote : sur 390 pixels de large, les 26 pixels qui ecartaient deux
-     etiquettes voisines poussaient celle de l aine hors de l ecran, ou son nom
-     etait coupe. En hauteur il n y a pas de bord a heurter. */
   .plaque-decalee-haut {
-    margin: -46px 0 0 0;
+    margin: -11px 0 0 0;
   }
 
   .plaque-decalee-bas {
-    margin: 46px 0 0 0;
+    margin: 11px 0 0 0;
   }
 }

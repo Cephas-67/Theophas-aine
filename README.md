@@ -3,8 +3,9 @@
 L'arbre de la famille Théophas Ainé, en volume, planté dans une prairie.
 Le fût est la souche, chaque branche maîtresse est un enfant, chaque branche
 seconde un petit-enfant. Trois générations, 21 membres de la lignée et 7
-unions. On en fait le tour au doigt, on s'approche, on touche une branche pour
-ouvrir la fiche de la personne.
+unions. Un fil remonte du pied jusqu'à chaque visage et montre la filiation.
+On en fait le tour au doigt, on s'approche, on touche un visage ou une branche
+pour ouvrir la fiche de la personne.
 
 ![L'arbre au milieu de la prairie, à midi](vues/jour.jpg)
 
@@ -18,8 +19,14 @@ npm run dev
 ```
 
 La page s'ouvre sur **http://localhost:5177**. Glissez pour faire le tour de
-l'arbre, molette ou deux doigts pour approcher, touchez une branche ou un
-visage pour ouvrir la fiche.
+l'arbre, molette ou deux doigts pour approcher, touchez un visage ou une
+branche pour ouvrir la fiche.
+
+Sur l'arbre il n'y a que des visages, pas de noms : vingt et une pancartes
+portant chacune un nom, deux dates et un conjoint couvraient la moitié de la
+couronne, et on ne voyait plus l'arbre. Le nom sort en infobulle au survol, il
+est lu par un lecteur d'écran, et il s'ouvre en entier dans la fiche au
+premier toucher.
 
 Pour voir la version construite, celle qu'on met en ligne :
 
@@ -79,6 +86,7 @@ une recette qui se calcule au chargement.
 | `src/bois.ts` | le bois entier, cousu en une seule géométrie |
 | `src/matieres.ts` | l'écorce et la feuille, écrites dans des nuanceurs |
 | `src/feuillage.ts` | les cartes de feuillage, toutes instanciées |
+| `src/fil.ts` | le fil de la généalogie, du pied jusqu'à chaque visage |
 | `src/environnement.ts` | le paysage : il assemble `src/paysage/` et pose l'heure |
 | `src/paysage/bruit.ts` | le bruit simplexe et la hauteur du sol |
 | `src/paysage/terre.ts` | le terrain, sa rampe de couleurs, les pierres |
@@ -87,13 +95,29 @@ une recette qui se calcule au chargement.
 | `src/paysage/meteo.ts` | la pluie, la neige, les flaques, l'éclair |
 | `src/paysage/heures.ts` | les quatre heures et les quatre temps |
 | `src/decor.ts` | la vue, les gestes, le cadrage, le gardien de cadence |
-| `src/etiquettes.ts` | les noms et les visages posés au bout des branches |
+| `src/etiquettes.ts` | les visages posés au bout des branches |
 
 L'arbre entier, fût, branches et cinq étages de fourches, est cousu en une
 seule géométrie : un appel de dessin pour mille cent treize branches. Le
-feuillage en est un autre, pour douze mille cartes. Les noms et les visages ne
-sont pas dans la scène, ce sont des éléments du document : ils restent nets à
-tout zoom, se lisent par un lecteur d'écran, et ne coûtent aucun appel.
+feuillage en est un autre, pour douze mille cartes, et le fil un troisième.
+Les visages ne sont pas dans la scène, ce sont des éléments du document : ils
+restent nets à tout zoom, se lisent par un lecteur d'écran, et ne coûtent
+aucun appel de dessin.
+
+### Le fil
+
+L'arbre dit la famille par sa forme, mais sa forme est aussi celle d'un arbre :
+les rameaux, le feuillage et les fourches anonymes occupent l'œil autant que
+les six branches qui portent quelqu'un. Le fil tranche. Il monte du pied, suit
+le fût, se divise à chaque enfant, se divise encore à chaque petit-enfant, et
+s'arrête sous chaque visage.
+
+Il ne double pas le bois, il en suit le tracé : chaque branche qui porte
+quelqu'un est parcourue, et comme une branche seconde part du bout de celle de
+son parent, le fil est continu du bas vers le haut sans qu'on ait à le
+recoudre. Il passe devant le feuillage, volontairement : un fil de lecture
+qu'une feuille peut cacher ne se lit plus, et c'est justement quand la
+couronne est dense qu'on en a besoin.
 
 ### Le paysage
 
@@ -171,8 +195,9 @@ tient la cadence, il ne touche à rien et le paysage complet est servi.
 
 ## Ce qui reste
 
-- Au premier cadrage, deux ou trois étiquettes d'enfants se recouvrent encore
-  selon l'angle ; elles se séparent dès qu'on tourne l'arbre.
+- Le fil est d'une épaisseur constante : au pied, où le fût est large, il se
+  voit plus qu'il ne devrait ; il faudrait qu'il s'affine avec la branche
+  qu'il suit.
 - `ANATOMIE.md` décrit le relevé du baobab, qui commandait la silhouette avant
   que l'arbre ne soit refait à fourches. Ce qu'il dit de l'écorce reste vrai,
   ce qu'il dit du fût et de la couronne ne l'est plus.

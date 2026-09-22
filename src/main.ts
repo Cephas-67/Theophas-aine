@@ -10,6 +10,7 @@ import { compterLOssature, ossature, type Segment } from './squelette'
 import { fabriquerLeBois } from './bois'
 import { ecorce, feuillage, ombreDesFeuilles, partages } from './matieres'
 import { compterLeFeuillage, fabriquerLeFeuillage } from './feuillage'
+import { tirerLeFil } from './fil'
 import { poserLesEtiquettes, trierParDistance } from './etiquettes'
 import { annees, aPlat, compter, SOUCHE, type Personne } from './genealogie'
 
@@ -43,6 +44,12 @@ const houppier = fabriquerLeFeuillage(segments, feuillage())
 // sans cette matiere-la, chaque carte projetait un rectangle plein au sol.
 houppier.customDepthMaterial = ombreDesFeuilles()
 vue.scene.add(houppier)
+
+// Le fil de la genealogie : il monte du pied, suit le fut, se divise a chaque
+// enfant puis a chaque petit-enfant, et s arrete sous chaque visage. C est la
+// lecture de l arbre posee sur l arbre, du bas vers le haut.
+const fil = tirerLeFil(segments)
+vue.scene.add(fil.maillage)
 
 // Le cadrage vient apres le bois : il se prend sur la boite que l arbre occupe
 // pour de vrai, pas sur la hauteur nominale de la recette.
@@ -229,6 +236,7 @@ const cout = {
   ...compterLOssature(segments),
   trianglesDuBois: bois.triangles,
   ...compterLeFeuillage(segments),
+  trianglesDuFil: fil.triangles,
   ...vue.paysage.cout,
   variante: vue.paysage.heure.id + ' / ' + vue.paysage.temps.id,
   personnes: compte.total,

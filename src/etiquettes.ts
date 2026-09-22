@@ -57,10 +57,16 @@ export function poserLesEtiquettes(vue: Vue, segments: Segment[], contenant: HTM
       element.classList.add(rangDesAines % 2 === 0 ? 'plaque-decalee-haut' : 'plaque-decalee-bas')
       rangDesAines += 1
     }
+
     element.dataset.personne = personne.id
 
-    // Le visage, en medaillon rond, avant le nom. C est ce qu on reconnait en
-    // premier sur un arbre de famille : un nom se lit, un visage se voit.
+    // Le visage, et lui seul.
+    //
+    // Vingt et une plaques portant chacune un nom, deux dates et un conjoint
+    // couvraient la moitie de la couronne : on ne voyait plus l arbre, on
+    // voyait des pancartes. C est ce qu on reconnait en premier sur un arbre
+    // de famille qui reste : un nom se lit, un visage se voit. Le reste ouvre
+    // au toucher, dans la fiche, ou il y a la place de tout dire.
     // L image est servie par le site, jamais appelee ailleurs, et elle est
     // rapatriee par `npm run theophas:visages`.
     //
@@ -71,6 +77,11 @@ export function poserLesEtiquettes(vue: Vue, segments: Segment[], contenant: HTM
     visage.className = 'plaque-visage'
     visage.src = `visages/${personne.id}.jpg`
     visage.alt = ''
+    // Le nom n est pas ecrit sous le visage, il est porte par le bouton. Il
+    // reste donc lisible par un lecteur d ecran et il sort en infobulle au
+    // survol, sans occuper un centimetre carre de l image.
+    element.title = `${personne.prenom} ${personne.nom}, ${annees(personne)}`
+    element.setAttribute('aria-label', element.title)
     visage.width = 192
     visage.height = 192
     // Rien ne doit attendre une image pour s afficher, et un medaillon qui
@@ -79,29 +90,10 @@ export function poserLesEtiquettes(vue: Vue, segments: Segment[], contenant: HTM
     visage.decoding = 'async'
     element.appendChild(visage)
 
-    const textes = document.createElement('span')
-    textes.className = 'plaque-textes'
-    element.appendChild(textes)
-
-    const nom = document.createElement('span')
-    nom.className = 'plaque-nom'
-    nom.textContent = `${personne.prenom} ${personne.nom}`
-    textes.appendChild(nom)
-
-    const dates = document.createElement('span')
-    dates.className = 'plaque-annees'
-    dates.textContent = annees(personne)
-    textes.appendChild(dates)
-
-    if (personne.union) {
-      const couple = document.createElement('span')
-      couple.className = 'plaque-union'
-      couple.textContent = `avec ${personne.union.prenom} ${personne.union.nom}`
-      textes.appendChild(couple)
-    }
-
     // Le tronc porte son nom a mi-hauteur et non a sa cime, ou il serait
     // cache par les branches maitresses.
+    // La souche porte son visage a mi-hauteur du fut et non a sa cime, ou il
+    // serait cache par les branches maitresses.
     const place = segment.rang === 0
       ? segment.ligne[Math.floor(segment.ligne.length * 0.55)].clone()
       : segment.bout.clone()
@@ -129,7 +121,13 @@ export function poserLesEtiquettes(vue: Vue, segments: Segment[], contenant: HTM
 export function trierParDistance(plaques: Plaques, vue: Vue): void {
   const distance = vue.camera.position.distanceTo(vue.gestes.target)
   for (const etiquette of plaques.liste) {
-    const visible = etiquette.rang <= 1 || distance < 17
+    // Tout se montre, toujours. Un rond de vingt-six pixels ne couvre rien, la
+    // ou une pancarte couvrait une branche entiere : la regle de la carte, qui
+    // cachait la troisieme generation au-dela de dix-sept unites, n avait de
+    // sens que pour du texte. Et c est justement la generation la plus
+    // nombreuse, quatorze personnes sur vingt et une, qu on cachait a la vue
+    // d ensemble.
+    const visible = true
     etiquette.element.classList.toggle('plaque-effacee', !visible)
   }
 }
