@@ -41,19 +41,19 @@ const SEUILS = {
   // ici a la main, sans source ; il est retire plutot que garde pour faire
   // severe.
   neuviemeDixiemeMs: 20,
-  // Le ciel, le terrain, les pierres, l herbe, le bois, le feuillage, plus la
-  // passe d ombre pour les deux qui la projettent. Le seuil laisse deux de
-  // marge ; au-dela, quelqu un a decoupe une piece en morceaux.
-  appels: 10,
-  // Le paysage de ThreeUI porte ce qu il porte : 91 800 triangles de terrain,
-  // 192 000 de pierres, 936 000 d herbe. Le seuil n est pas un budget choisi,
-  // c est le compte de la scene plus un dixieme de marge, et il est ecrit ici
-  // pour qu une piece qui grossit en douce se voie.
+  // Le ciel, le terrain, les pierres, l herbe, le bois, le feuillage, les
+  // nuages, les oiseaux, les papillons, le mouton et ses pattes, plus la passe
+  // d ombre pour ceux qui la projettent. Mesure : onze. Le seuil laisse trois
+  // de marge ; au-dela, quelqu un a decoupe une piece en morceaux.
+  appels: 14,
+  // Le seuil n est pas un budget choisi, c est le compte mesure de la scene
+  // plus un dixieme de marge, et il est ecrit ici pour qu une piece qui
+  // grossit en douce se voie. Mesure : 546 944.
   //
   // L ancien seuil, 60 000, etait celui d un arbre seul sur un fond peint. Il
   // n a pas ete relache pour faire passer le banc : la scene a change de
   // nature, et un seuil qui decrit une autre scene ne mesure rien.
-  triangles: 1400000,
+  triangles: 620000,
 }
 
 const navigateur = await puppeteer.launch({
@@ -86,6 +86,7 @@ try {
     if (part <= 0.6 && window.theophas.alleger) {
       window.theophas.alleger(vue, 1)
       window.theophas.alleger(vue, 2)
+      window.theophas.alleger(vue, 3)
     }
     const gl = vue.rendu.getContext()
     // Le plancher : une scene vide, rendue et lue de la meme facon. Ce qui

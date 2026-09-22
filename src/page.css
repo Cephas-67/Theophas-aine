@@ -108,35 +108,204 @@ body {
   cursor: grabbing;
 }
 
-/* Le fond derriere l entete n est pas toujours le ciel : de pres ou vu de
-   haut, c est la terre qui passe dessous, et de nuit c est parfois le pied du
-   fut en pleine lumiere chaude. Une plaque, comme celle des noms, tient sur
-   les trois. */
-.entete {
+/* Le verre.
+
+   Apple en donne cinq ingredients optiques, et c est cette liste qu on suit :
+   translucidite et flou, refraction, aberration chromatique, reflet speculaire
+   dirige, et l arete qui prend la lumiere. Les quatre derniers sont ce qui
+   separe du verre d un simple aplat transparent floute.
+
+   1. Le flou et la saturation. `blur` mange le detail de l herbe, `saturate`
+      rend au fond la couleur que le flou lui a retiree.
+
+   2. La clarte. `brightness(1.3)` remonte ce qui passe derriere, et c est lui
+      qui rend le texte lisible sans poser une plaque opaque. C est aussi ce
+      que fait le verre d Apple : il s adapte a ce qu il couvre au lieu de le
+      cacher. Un gris ne tient sur aucune photographie, mais un gris sur un
+      fond remonte d un tiers, si.
+
+   3. L arete. Claire en haut, sombre en bas : une plaque de verre prend la
+      lumiere sur sa tranche superieure et la perd sur l inferieure. Sans ces
+      deux bordures, le flou seul donne un aplat sale.
+
+   4. Le reflet speculaire, en `::before` : une bande claire en biais, plus
+      forte dans l angle haut gauche, qui suit la meme lumiere que la scene.
+      C est ce qui fait qu une surface a l air dure.
+
+   5. La refraction, dans `@supports` plus bas : elle n est pas ecrivable en
+      CSS, aucune fonction de `backdrop-filter` ne deplacant un pixel. Elle
+      passe par un filtre SVG, que seul Chromium accepte a cet endroit. La ou
+      il n est pas reconnu, il reste les quatre autres, et ils suffisent. */
+.verre {
+  position: relative;
+  isolation: isolate;
+  background: hsl(210 40% 100% / 0.3);
+  backdrop-filter: blur(12px) saturate(1.8) brightness(1.28);
+  -webkit-backdrop-filter: blur(12px) saturate(1.8) brightness(1.28);
+  border: 1px solid hsl(0 0% 100% / 0.5);
+  border-top-color: hsl(0 0% 100% / 0.85);
+  border-bottom-color: hsl(220 25% 45% / 0.22);
+  box-shadow:
+    0 10px 30px hsl(220 35% 18% / 0.2),
+    inset 0 1px 0 hsl(0 0% 100% / 0.85),
+    inset 0 -8px 20px hsl(220 30% 60% / 0.12);
+}
+
+.verre::before {
+  content: '';
   position: absolute;
-  top: clamp(16px, 3vw, 32px);
-  left: clamp(16px, 3vw, 32px);
-  max-width: 22ch;
-  padding: 10px 14px;
-  border-radius: var(--rayon);
-  background: var(--w0);
-  border: 1px solid var(--line);
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    linear-gradient(135deg, hsl(0 0% 100% / 0.55) 0%, hsl(0 0% 100% / 0.12) 28%,
+      transparent 52%, hsl(0 0% 100% / 0.1) 84%, hsl(0 0% 100% / 0.4) 100%);
+}
+
+/* Sur une carte qui ne tient pas la cadence, le gardien retire le flou : ce
+   qui reste est une plaque pleine, qui porte le texte aussi bien. Le reflet et
+   l arete restent, donc la piece a toujours l air d etre en verre. */
+:root[data-allege='oui'] .verre {
+  background: hsl(210 30% 99% / 0.94);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Le filtre lui-meme ne se dessine jamais : il n est la que pour etre cite. */
+.filtres {
+  position: absolute;
+  width: 0;
+  height: 0;
   pointer-events: none;
 }
 
-.entete h1 {
+/* Le titre, et rien d autre.
+   Il y avait la un panneau au nom de la souche avec le compte des personnes
+   dessous, et une phrase de consignes en bas a gauche. Les deux disaient ce
+   que l image montre : on voit un arbre, on voit des visages, on voit qu ils
+   sont relies. Ce qui reste est le seul mot que l image ne dit pas.
+
+   En bas, au milieu : en haut a gauche il se posait sur la couronne, qui est
+   la partie pleine de l image ; en bas il est sur la prairie, qui est vide. */
+.titre {
+  position: absolute;
+  bottom: clamp(14px, 2.6vw, 26px);
+  left: 50%;
+  transform: translateX(-50%);
   margin: 0;
-  font-size: clamp(28px, 5vw, 42px);
+  padding: 9px 18px;
+  border-radius: 999px;
+  font-size: clamp(16px, 2.2vw, 20px);
   font-weight: 600;
-  letter-spacing: -0.03em;
-  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  pointer-events: none;
 }
 
-.compte {
-  margin: 6px 0 0;
-  color: var(--gris);
-  font-size: 15px;
-  line-height: 1.4;
+/* La legende, a droite : une ligne par personne. */
+.legende {
+  position: absolute;
+  top: clamp(14px, 2.6vw, 26px);
+  right: clamp(14px, 2.6vw, 26px);
+  bottom: clamp(14px, 2.6vw, 26px);
+  width: min(310px, 34vw);
+  padding: 6px;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.legende-liste {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  height: 100%;
+  margin: 0;
+  padding: 2px;
+  overflow-y: auto;
+  list-style: none;
+  /* Le defilement ne doit pas emporter la scene avec lui. */
+  overscroll-behavior: contain;
+  /* La barre native de Windows fait dix-sept pixels de large et un gris plein :
+     posee sur du verre, c est la piece la plus lourde de l ecran. Le panneau
+     se defile a la molette, au doigt et au clavier sans elle. */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.legende-liste::-webkit-scrollbar {
+  display: none;
+}
+
+.legende-ligne {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  width: 100%;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 12px;
+  background: none;
+  color: var(--ink);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s var(--courbe);
+}
+
+.legende-ligne:hover,
+.legende-ligne:focus-visible {
+  background: hsl(210 20% 100% / 0.9);
+  outline: none;
+}
+
+.legende-ligne[aria-current='true'] {
+  background: #ffffff;
+  box-shadow: inset 0 0 0 1px var(--ocean);
+}
+
+.legende-visage {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Le retrait dit la generation : chaque rang decale d un demi-visage. */
+.legende-g1 { padding-left: 20px; }
+.legende-g2 { padding-left: 34px; }
+.legende-g3 { padding-left: 48px; }
+
+.legende-g2 .legende-visage,
+.legende-g3 .legende-visage {
+  width: 26px;
+  height: 26px;
+}
+
+.legende-textes {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.legende-nom {
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1.25;
+}
+
+.legende-recit {
+  /* Pas de gris du tout.
+     Un gris ne tient sur aucune photographie : meme derriere du verre a neuf
+     dixiemes, la prairie remonte et le recit se perd une ligne sur deux. Le
+     recit prend donc la meme encre que le nom, et c est la graisse et le corps
+     qui les distinguent, ce qui est de toute facon la bonne facon de les
+     distinguer. */
+  color: var(--ink);
+  font-size: 11.5px;
+  line-height: 1.42;
 }
 
 /* Les noms portes par les branches */
@@ -227,13 +396,11 @@ body {
 /* La fiche d une personne */
 .fiche {
   position: absolute;
-  top: clamp(16px, 3vw, 32px);
-  right: clamp(16px, 3vw, 32px);
-  width: min(340px, calc(100vw - 32px));
+  top: clamp(14px, 2.6vw, 26px);
+  left: clamp(14px, 2.6vw, 26px);
+  width: min(330px, calc(100vw - 32px));
   padding: 20px 22px 22px;
-  border: 1px solid var(--bordure);
-  border-radius: var(--rayon);
-  background: var(--w0);
+  border-radius: 18px;
 }
 
 .fiche[hidden] {
@@ -249,7 +416,7 @@ body {
 
 .fiche-annees {
   margin: 2px 0 14px;
-  color: var(--gris);
+  color: var(--ink);
   font-size: 14px;
 }
 
@@ -263,7 +430,9 @@ body {
 }
 
 .fiche dt {
-  color: var(--gris);
+  /* Meme raison que le recit de la legende : pas de gris sur du verre. */
+  color: var(--ink);
+  font-weight: 600;
 }
 
 .fiche dd {
@@ -275,9 +444,9 @@ body {
   top: 12px;
   right: 12px;
   padding: 4px 10px;
-  border: 1px solid var(--bordure);
+  border: 1px solid hsl(220 20% 40% / 0.28);
   border-radius: 999px;
-  background: var(--surface);
+  background: hsl(0 0% 100% / 0.6);
   color: var(--encre-douce);
   font-family: inherit;
   font-size: 12px;
@@ -290,23 +459,28 @@ body {
   border-color: var(--encre);
 }
 
-.gestes {
-  position: absolute;
-  left: clamp(16px, 3vw, 32px);
-  bottom: clamp(16px, 3vw, 24px);
-  max-width: 44ch;
-  margin: 0;
-  padding: 6px 12px;
-  border-radius: var(--rayon);
-  background: var(--w0);
-  border: 1px solid var(--line);
-  color: var(--encre-douce);
-  font-size: 13px;
-  line-height: 1.45;
-  pointer-events: none;
-}
-
 @media (max-width: 720px) {
+  /* Sur telephone la legende passe en bandeau bas, et la fiche par-dessus
+     elle : les deux ne peuvent pas tenir cote a cote sur 390 pixels. */
+  .legende {
+    top: auto;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    width: auto;
+    height: 34vh;
+  }
+
+  /* Le bandeau de legende prend le bas de l ecran, donc le titre repasse en
+     haut : remonte juste au-dessus du bandeau, il tombait en plein sur les
+     visages de la deuxieme generation. En haut il n y a que du ciel. */
+  .titre {
+    top: 12px;
+    bottom: auto;
+    padding: 7px 14px;
+    font-size: 15px;
+  }
+
   .fiche {
     top: auto;
     right: 12px;
@@ -314,10 +488,7 @@ body {
     bottom: 12px;
     width: auto;
     padding: 16px 16px 18px;
-  }
-
-  .gestes {
-    display: none;
+    z-index: 2;
   }
 
   /* Sur trois cent quatre-vingt-dix pixels de large, les ronds se serrent :

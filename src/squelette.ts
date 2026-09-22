@@ -45,7 +45,7 @@ const P = {
   /** Du pied a la premiere fourche. */
   futSurHauteur: 0.37,
   /** La demi-envergure de la couronne. */
-  demiCouronneSurHauteur: 0.425,
+  demiCouronneSurHauteur: 0.54,
   rayonAuPiedSurHauteur: 0.021,
   rayonSousLaFourcheSurHauteur: 0.017,
 }
@@ -61,7 +61,8 @@ export const MESURES = {
 export type Segment = {
   /** L identifiant de la personne portee, vide pour un rameau. */
   personne: string
-  /** 0 le fut, 1 une branche maitresse, 2 une seconde, 3 un rameau. */
+  /** La generation portee : 0 la souche, 1 un enfant, 2 un petit-enfant,
+      3 un arriere-petit-enfant. 9 pour un rameau, qui ne porte personne. */
   rang: number
   ligne: Vector3[]
   rayonDepart: number
@@ -230,7 +231,7 @@ function fourcher(
     const rayonIci = rayon * regle.rayon
     const brin: Segment = {
       personne: '',
-      rang: 3,
+      rang: 9,
       // Le redressement faiblit avec l etage : les grosses branches font le
       // vase, les pousses du bout partent a peu pres droit devant elles.
       ligne: brancher(depart, sens, longueurIci, regle.sections, 0.26 - etage * 0.04, 0.10),
@@ -252,10 +253,15 @@ function fourcher(
 /**
  * L ossature entiere.
  *
+ * Elle descend autant de generations que la genealogie en porte, sans savoir
+ * combien il y en a : chaque personne est une branche, ses enfants sont la
+ * fourche de sa branche, et on recommence. Ajouter une cinquieme generation
+ * dans `genealogie.ts` ne demande pas une ligne ici.
+ *
  * L ordre de la fratrie suit la convention genealogique : l aine a gauche, le
  * benjamin a droite, en tournant par l avant de l arbre. Les six enfants
- * partent tous du meme point, le haut du fut, parce que c est ainsi que cet
- * arbre-la est fait : une seule fourche, large, d ou tout sort.
+ * s etagent sur le dernier huitieme du fut, l aine le plus bas, parce qu une
+ * branche basse est une branche vieille.
  */
 export function ossature(): Segment[] {
   const segments: Segment[] = []
@@ -263,22 +269,17 @@ export function ossature(): Segment[] {
   segments.push(tronc)
 
   const enfants = SOUCHE.enfants ?? []
-
   enfants.forEach((enfant: Personne, i: number) => {
     const part = i / Math.max(1, enfants.length)
-    // De la gauche vers la droite en passant par l avant. Le tour complet et
-    // non les cinq sixiemes : ici les six departs sont au meme endroit, et
-    // laisser un secteur vide ouvrirait un trou franc dans la couronne.
+    // Le tour complet et non les cinq sixiemes : les six departs sont presque
+    // au meme endroit, et laisser un secteur vide ouvrirait un trou franc.
     const azimut = Math.PI - part * Math.PI * 2
+    // Quarante-six degres d ecart a la verticale. Plus ferme, les six branches
+    // montaient en gerbe serree et les visages se touchaient a l ecran ; c est
+    // l ouverture qui aere la couronne, pas la longueur.
     const ecart = 0.80 + dedans() * 0.18
     const sens = new Vector3(Math.cos(azimut) * Math.sin(ecart), Math.cos(ecart), Math.sin(azimut) * Math.sin(ecart))
-    // Les six departs s etagent sur le dernier huitieme du fut au lieu de
-    // sortir tous du meme point, l aine le plus bas puisqu une branche basse
-    // est une branche vieille. Sur l image de reference la division se fait
-    // elle aussi sur une courte hauteur et non en un point unique. Six
-    // etiquettes accrochees a six bouts partis du meme endroit se
-    // recouvraient, et on ne lisait plus un seul nom.
-    const longueur = MESURES.rayonDeCouronne * (0.86 + dedans() * 0.16)
+    const longueur = MESURES.rayonDeCouronne * (0.78 + dedans() * 0.14)
     const maitresse: Segment = {
       personne: enfant.id,
       rang: 1,
@@ -292,32 +293,54 @@ export function ossature(): Segment[] {
     }
     maitresse.bout = maitresse.ligne[maitresse.ligne.length - 1].clone()
     segments.push(maitresse)
-
-    // Les petits-enfants sont la fourche de leur parent : ils ne se greffent
-    // pas sur son flanc, ils sont ce en quoi il se divise. C est la regle de
-    // cet arbre, et c est aussi la verite genealogique.
-    const petits = enfant.enfants ?? []
-    const sorties = ouvrirLaFourche(capDuBout(maitresse.ligne), petits.length, 0.46)
-    petits.forEach((petit: Personne, j: number) => {
-      const longueur2 = longueur * (0.74 + dedans() * 0.14)
-      const seconde: Segment = {
-        personne: petit.id,
-        rang: 2,
-        ligne: brancher(maitresse.bout, sorties[j], longueur2, 5, 0.28, 0.075),
-        rayonDepart: maitresse.rayonBout * 0.86,
-        rayonBout: maitresse.rayonBout * 0.58,
-        pans: 10,
-        souplesse: 0.22,
-        bout: new Vector3(),
-        feuillu: false,
-      }
-      seconde.bout = seconde.ligne[seconde.ligne.length - 1].clone()
-      segments.push(seconde)
-      fourcher(seconde.bout, capDuBout(seconde.ligne), 0, longueur2, seconde.rayonBout, segments)
-    })
+    pousserLaSuite(maitresse, enfant, 2, longueur, segments)
   })
 
   return segments
+}
+
+/**
+ * Ce qui pousse au bout d une branche qui porte quelqu un.
+ *
+ * Ses enfants sont sa fourche : ils ne se greffent pas sur son flanc, ils sont
+ * ce en quoi elle se divise. C est la regle de cet arbre, et c est aussi la
+ * verite genealogique. Quand la personne n a pas d enfants, la branche finit
+ * en rameaux qui ne portent personne : un arbre dont les branches s arretent
+ * net la ou la famille s arrete n est pas un arbre, c est un diagramme.
+ */
+function pousserLaSuite(
+  parent: Segment,
+  personne: Personne,
+  rang: number,
+  longueur: number,
+  segments: Segment[],
+): void {
+  const enfants = personne.enfants ?? []
+  if (enfants.length === 0) {
+    fourcher(parent.bout, capDuBout(parent.ligne), 0, longueur, parent.rayonBout, segments)
+    return
+  }
+  // L ouverture s elargit d une generation a l autre : les branches y sont
+  // plus courtes, et une fourche qui garderait le meme angle donnerait des
+  // bouts de plus en plus serres, donc des visages colles.
+  const sorties = ouvrirLaFourche(capDuBout(parent.ligne), enfants.length, 0.52 + rang * 0.07)
+  enfants.forEach((enfant: Personne, j: number) => {
+    const longueurIci = longueur * (0.70 + dedans() * 0.12)
+    const branche: Segment = {
+      personne: enfant.id,
+      rang,
+      ligne: brancher(parent.bout, sorties[j], longueurIci, 5, 0.26, 0.075),
+      rayonDepart: parent.rayonBout * 0.86,
+      rayonBout: parent.rayonBout * 0.58,
+      pans: Math.max(6, 12 - rang * 2),
+      souplesse: Math.min(0.6, 0.12 * rang),
+      bout: new Vector3(),
+      feuillu: false,
+    }
+    branche.bout = branche.ligne[branche.ligne.length - 1].clone()
+    segments.push(branche)
+    pousserLaSuite(branche, enfant, rang + 1, longueurIci, segments)
+  })
 }
 
 /** Ce que l ossature coute, pour le banc et pour la fiche technique. */

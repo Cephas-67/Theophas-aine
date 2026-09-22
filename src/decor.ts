@@ -176,12 +176,25 @@ export function alleger(vue: Vue, niveau: number): void {
   if (niveau >= 1) {
     const ombre = vue.paysage.soleil.shadow
     ombre.mapSize.set(1024, 1024)
+    // Jeter la cible force three a en reallouer une a la nouvelle taille :
+    // changer mapSize seul ne touche pas celle qui est deja en place.
     ombre.map?.dispose()
-    ombre.map = null
+    ombre.map = null as unknown as typeof ombre.map
   }
   if (niveau >= 2) {
     const herbe = vue.paysage.herbe
     herbe.semis.count = Math.round(herbe.combien * 0.45)
+  }
+  if (niveau >= 3) {
+    // Le verre des panneaux perd son flou.
+    //
+    // Ce flou ne coute rien a la scene : il est paye par le compositeur du
+    // navigateur, pas par notre rendu. Mais les deux se partagent la meme
+    // carte, et la mesure le dit sans ambiguite : a vingt-quatre pixels de
+    // rayon sur trois panneaux, l image passait de 68 a 158 millisecondes, et
+    // le filtre de refraction SVG la poussait a 278. La feuille de style
+    // reprend alors une plaque pleine, qui se lit aussi bien et ne coute rien.
+    document.documentElement.setAttribute('data-allege', 'oui')
   }
 }
 
@@ -224,7 +237,7 @@ export function gardienDeCadence(vue: Vue): (dessiner: () => void) => void {
       premieres = 10 // la toile vient d etre reallouee
       return
     }
-    if (allege < 2) {
+    if (allege < 3) {
       allege += 1
       alleger(vue, allege)
       premieres = 10 // la carte d ombre vient d etre refaite
@@ -264,8 +277,12 @@ export function cadrerLArbre(vue: Vue, boite: Box3): void {
   // faut de la place au-dessus de la couronne pour le ciel, et en dessous pour
   // que la prairie et la ligne d horizon entrent dans l image. Un arbre cale
   // contre le bord haut du cadre perd le paysage qu on vient de monter.
+  // La marge en hauteur est plus large sur un ecran etroit : le bandeau de
+  // legende y prend le tiers bas de l ecran, et sans ce recul le pied du fut
+  // passait derriere lui.
+  const etroit = vue.camera.aspect < 1
   const pourLaLargeur = (demiLarge * 1.16) / Math.tan(demiLargeur)
-  const pourLaHauteur = (demiHaut * 1.30) / Math.tan(demiHauteur)
+  const pourLaHauteur = (demiHaut * (etroit ? 1.85 : 1.30)) / Math.tan(demiHauteur)
   const recul = Math.min(vue.gestes.maxDistance, Math.max(pourLaLargeur, pourLaHauteur))
   // Une vue basse, presque a hauteur d homme, comme celle de la source.
   //

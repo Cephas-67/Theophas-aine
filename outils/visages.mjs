@@ -59,6 +59,20 @@ const VISAGES = [
   ['mahouna-z', 'photo-1646457411135-37fa10a51c3d', 'XvnVGXhNV94', 'Ben Masora'],
   ['setondji-k', 'photo-1552493450-2b5ce80ed13f', '1K7yDWuamRA', 'Joshua Oluwagbemiga'],
   ['fatoumata-k', 'photo-1729021284682-8b26fef07721', 'LakFt4OtKxg', 'Trésor Kande'],
+  // La quatrieme generation, nee entre 2001 et 2014 : des enfants et des
+  // adolescents, pas des portraits d adultes reduits.
+  ['dossa-ks', 'photo-1653017470198-cecc1a5f3a60', 'GdfxGavRlFk', 'Ronal Santana'],
+  ['nadege-ks', 'photo-1744973055670-e8ebb6261541', 'vSFTvOgI2Io', 'Lisa Marie Theck'],
+  ['elom-as', 'photo-1596369229153-67fab7097a1e', 'eoLC-dFIG6s', 'John Onaeko'],
+  ['sena-g', 'photo-1686721800388-1c3bfea98d41', 'KqaCBwr-rJw', 'Picha HD'],
+  ['kossi-g', 'photo-1693639257331-0bad8ac3913f', '1P6Py2h0WtA', 'Chidy Young'],
+  ['afi-sa', 'photo-1744973004202-e49f4ffc13e5', 'vJUWnwT_Vag', 'Lisa Marie Theck'],
+  ['edem-sa', 'photo-1597762117709-859f744b84c3', 'sjuLxUOEMY8', 'Ben Koorengevel'],
+  ['lawson-ka', 'photo-1695131494999-7961f82afda1', 'HNyTfMv3Tk8', 'Michael Ali'],
+  ['togbe-yk', 'photo-1782136660529-1f12b16e5d76', 'ORTi8PwkVJE', 'Shane Ryan Herilalaina'],
+  ['akouavi-yk', 'photo-1736205360390-024ab4d248bd', '95AGS_Bb1Ng', 'Chidy Young'],
+  ['rachidi-mk', 'photo-1524582046670-ba4dbe52ede2', 'p8qMRZXCLd0', 'Melissa Askew'],
+  ['colette-aw', 'photo-1760808574067-27ce83df8ed6', '0HNG4yqLR3k', 'Menor Degu'],
 ]
 
 const COTE = 192

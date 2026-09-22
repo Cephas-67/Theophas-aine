@@ -53,13 +53,20 @@ export function monterLHerbe(scene: Scene): Herbe {
   const geometrie = fabriquerLaLame()
   const matiere = fabriquerLaMatiere()
 
-  // Cent quatre mille, le compte de la source, et le meme partout. La lame
-  // pese neuf triangles, donc le champ entier en pese neuf cent mille : c est
-  // la piece la plus lourde du paysage, et de loin. Elle n est pas rabotee sur
-  // telephone. Ce qui est demande ici est le paysage de ThreeUI, pas une
-  // version allegee qui lui ressemble, et ce que ce compte coute se mesure au
-  // banc plutot que de se deviner.
-  const N = 104000
+  // La source en seme 104 000. La lame pese neuf triangles, donc le champ
+  // entier en pese 936 000, et le banc lui a mesure 21,2 ms par image sur une
+  // Intel HD 4600 : la piece la plus lourde du paysage.
+  //
+  // Elle est ramenee a 42 000, et le rayon du semis de 115 a 82 unites. Le
+  // compte de la source est calcule pour une camera au ras du sol qui regarde
+  // a l infini avec un objectif de dix degres ; la notre tourne autour d un
+  // arbre et ne voit jamais l herbe au-dela de quatre-vingts unites. Les
+  // soixante mille brins retires etaient derriere l horizon utile ou sous un
+  // pixel.
+  //
+  // La densite au premier plan, elle, ne bouge pas : c est elle qu on voit, et
+  // c est le rayon qui a ete coupe, pas la touffe.
+  const N = 42000
   const semis = new InstancedMesh(geometrie, matiere, N)
   semis.frustumCulled = false
   semis.receiveShadow = true
@@ -71,14 +78,14 @@ export function monterLHerbe(scene: Scene): Herbe {
   while (n < N && garde < N * 12) {
     garde += 1
     const th = Math.random() * Math.PI * 2
-    const r = 3 + Math.pow(Math.random(), 0.55) * 112
+    const r = 3 + Math.pow(Math.random(), 0.55) * 82
     const x = Math.cos(th) * r
     const z = Math.sin(th) * r
     if (penteDuSol(x, z) > 0.60) continue
     // La densite tombe avec la distance, et la hauteur des lames avec elle :
     // c est ce degrade qui fait que la prairie se fond dans le terrain au lieu
     // de s arreter sur un cercle net.
-    const bord = 1 - sm01((r - 34) / 74)
+    const bord = 1 - sm01((r - 28) / 54)
     if (Math.random() > 0.10 + bord * 0.86) continue
     m4.makeTranslation(x, hauteurDuSol(x, z) - 0.02, z)
     semis.setMatrixAt(n, m4)

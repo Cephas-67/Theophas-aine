@@ -1,11 +1,10 @@
-# Théophas Ainé
+# Arbre généalogique
 
-L'arbre de la famille Théophas Ainé, en volume, planté dans une prairie.
-Le fût est la souche, chaque branche maîtresse est un enfant, chaque branche
-seconde un petit-enfant. Trois générations, 21 membres de la lignée et 7
-unions. Un fil remonte du pied jusqu'à chaque visage et montre la filiation.
-On en fait le tour au doigt, on s'approche, on touche un visage ou une branche
-pour ouvrir la fiche de la personne.
+La famille Théophas Ainé en volume, plantée dans une prairie. Le fût est la
+souche, chaque branche est quelqu'un : un enfant au premier rang, un
+petit-enfant au deuxième, un arrière-petit-enfant au troisième. Quatre
+générations, 33 personnes. On tourne autour au doigt, on s'approche, on touche
+un visage pour lire qui c'est.
 
 ![L'arbre au milieu de la prairie, à midi](vues/jour.jpg)
 
@@ -19,14 +18,8 @@ npm run dev
 ```
 
 La page s'ouvre sur **http://localhost:5177**. Glissez pour faire le tour de
-l'arbre, molette ou deux doigts pour approcher, touchez un visage ou une
-branche pour ouvrir la fiche.
-
-Sur l'arbre il n'y a que des visages, pas de noms : vingt et une pancartes
-portant chacune un nom, deux dates et un conjoint couvraient la moitié de la
-couronne, et on ne voyait plus l'arbre. Le nom sort en infobulle au survol, il
-est lu par un lecteur d'écran, et il s'ouvre en entier dans la fiche au
-premier toucher.
+l'arbre, molette ou deux doigts pour approcher, touchez un visage, une branche
+ou une ligne de la légende pour ouvrir la fiche.
 
 Pour voir la version construite, celle qu'on met en ligne :
 
@@ -44,10 +37,9 @@ GitHub Pages, Netlify, une clé USB. Il ne demande rien à personne, ce que
 
 Tout se passe dans **`src/genealogie.ts`**. C'est le seul fichier à toucher
 pour faire grandir la famille : la forme de l'arbre en découle, elle n'est pas
-dessinée à part.
-
-Un enfant de plus sur la souche fait une branche maîtresse de plus. Un
-petit-enfant fait une branche seconde de plus sur la branche de son parent.
+dessinée à part. L'ossature descend autant de générations que la généalogie en
+porte, sans savoir combien il y en a, donc une cinquième ne demande pas une
+ligne de code.
 
 ```ts
 {
@@ -57,6 +49,7 @@ petit-enfant fait une branche seconde de plus sur la branche de son parent.
   naissance: 1947,
   lieu: 'Abomey',
   metier: 'Menuisier',
+  recit: "Ce qu'on raconte de lui dans la famille, en une phrase.",
   union: { prenom: 'Aké', nom: 'Dossou', naissance: 1950, origine: 'Ouidah' },
   enfants: [ /* la génération suivante, même forme */ ],
 }
@@ -65,14 +58,15 @@ petit-enfant fait une branche seconde de plus sur la branche de son parent.
 Rangez la fratrie **par âge, l'aîné en premier** : l'ordre du tableau est
 l'ordre des branches. L'aîné part le plus bas sur le fût, parce qu'une branche
 basse est une branche vieille, et la fratrie se lit de gauche à droite en
-tournant par l'avant de l'arbre.
+tournant par l'avant de l'arbre. Le conjoint n'a pas de branche : il est écrit
+dans la fiche de son époux, comme le veut la convention.
 
-Le conjoint n'a pas de branche : il est écrit sous le nom de son époux. C'est
-la convention d'un arbre généalogique, un couple se groupe.
+Le `recit` n'est pas du remplissage : c'est ce qui s'affiche sous le nom dans
+la légende, et c'est ce qu'une famille garde d'un parent quand les dates ne
+disent plus rien.
 
 Pour lui donner un visage, ajoutez sa ligne dans `outils/visages.mjs` et
-relancez `npm run visages`. Sans ça, l'étiquette s'affiche sans médaillon,
-et rien ne casse.
+relancez `npm run visages`. Sans ça, son rond s'affiche vide et rien ne casse.
 
 ## Comment c'est fait
 
@@ -81,12 +75,12 @@ une recette qui se calcule au chargement.
 
 | fichier | ce qu'il porte |
 |---|---|
-| `src/genealogie.ts` | la famille, et les conventions qui commandent l'arbre |
-| `src/squelette.ts` | l'ossature : le fût, puis cinq étages de fourches |
+| `src/genealogie.ts` | la famille, ses récits, et les conventions qui commandent l'arbre |
+| `src/squelette.ts` | l'ossature, qui descend autant de générations qu'il y en a |
 | `src/bois.ts` | le bois entier, cousu en une seule géométrie |
 | `src/matieres.ts` | l'écorce et la feuille, écrites dans des nuanceurs |
 | `src/feuillage.ts` | les cartes de feuillage, toutes instanciées |
-| `src/fil.ts` | le fil de la généalogie, du pied jusqu'à chaque visage |
+| `src/vivant.ts` | les nuages, les oiseaux, les papillons, le mouton |
 | `src/environnement.ts` | le paysage : il assemble `src/paysage/` et pose l'heure |
 | `src/paysage/bruit.ts` | le bruit simplexe et la hauteur du sol |
 | `src/paysage/terre.ts` | le terrain, sa rampe de couleurs, les pierres |
@@ -97,27 +91,32 @@ une recette qui se calcule au chargement.
 | `src/decor.ts` | la vue, les gestes, le cadrage, le gardien de cadence |
 | `src/etiquettes.ts` | les visages posés au bout des branches |
 
-L'arbre entier, fût, branches et cinq étages de fourches, est cousu en une
-seule géométrie : un appel de dessin pour mille cent treize branches. Le
-feuillage en est un autre, pour douze mille cartes, et le fil un troisième.
+### Les visages, et pas les noms
+
+Sur l'arbre il n'y a que des ronds. Trente-trois pancartes portant chacune un
+nom, deux dates et un conjoint couvraient la moitié de la couronne : on ne
+voyait plus l'arbre, on voyait des pancartes. Le nom sort en infobulle au
+survol, il est lu par un lecteur d'écran, et tout est écrit dans la légende à
+droite, une ligne par personne, décalée selon la génération.
+
 Les visages ne sont pas dans la scène, ce sont des éléments du document : ils
-restent nets à tout zoom, se lisent par un lecteur d'écran, et ne coûtent
-aucun appel de dessin.
+restent nets à tout zoom et ne coûtent aucun appel de dessin.
 
-### Le fil
+### Ce qui vit dans le paysage
 
-L'arbre dit la famille par sa forme, mais sa forme est aussi celle d'un arbre :
-les rameaux, le feuillage et les fourches anonymes occupent l'œil autant que
-les six branches qui portent quelqu'un. Le fil tranche. Il monte du pied, suit
-le fût, se divise à chaque enfant, se divise encore à chaque petit-enfant, et
-s'arrête sous chaque visage.
+Des nuages qui dérivent, un vol d'oiseaux, des papillons au-dessus de l'herbe,
+un mouton qui marche. Quatre géométries montées à la main, aucun fichier 3D.
+Les quatre cadences viennent de mesures publiées :
 
-Il ne double pas le bois, il en suit le tracé : chaque branche qui porte
-quelqu'un est parcourue, et comme une branche seconde part du bout de celle de
-son parent, le fil est continu du bas vers le haut sans qu'on ait à le
-recoudre. Il passe devant le feuillage, volontairement : un fil de lecture
-qu'une feuille peut cacher ne se lit plus, et c'est justement quand la
-couronne est dense qu'on en a besoin.
+| | cadence | source |
+|---|---|---|
+| nuage | 2,5 unités/s | le cumulus dérive à 5 à 10 mph selon la NOAA, soit 2,2 à 4,5 m/s |
+| oiseau | 7,6 battements/s | fréquence mesurée en vol libre pour les oiseaux qui alternent battements et plané |
+| papillon | 6 battements/s | mesuré sur *Pieris napi* |
+| mouton | 1,1 unité/s | allure confortable relevée sur tapis de pression |
+
+Une unité de scène vaut un mètre : l'arbre fait dix mètres, l'herbe vingt
+centimètres, le plat s'étend sur cent mètres.
 
 ### Le paysage
 
@@ -126,8 +125,14 @@ composant `Landscape` de [ThreeUI](https://threeui.com/three-js/landscape/noon),
 variante `noon`. Repris, pas importé : il n'y a ici **aucune dépendance à
 ThreeUI**, ni paquet, ni iframe, ni fichier copié. Leur source a été lue et
 réécrite en TypeScript dans `src/paysage/`, module par module, avec les mêmes
-valeurs, les mêmes bruits et les mêmes nuanceurs, et tout ce qui s'en écarte
-est dit en face de l'écart avec sa raison.
+teintes, les mêmes bruits et les mêmes nuanceurs.
+
+Trois comptes sont ramenés sous ceux de la source, et chacun est dit en face du
+nombre avec ce qu'il coûtait et pourquoi le réduire ne se voit pas d'ici : la
+finesse du terrain, le nombre de brins d'herbe, le nombre de pierres. La source
+cadre son paysage avec un objectif de dix degrés depuis le ras du sol ; nous
+tournons autour d'un arbre à quarante-deux degrés, et ce que ce cadrage-là ne
+montre pas n'a pas à être rendu.
 
 Les sept variantes se demandent par l'adresse :
 
@@ -137,19 +142,28 @@ Les sept variantes se demandent par l'adresse :
 ?variante=rain      ?variante=storm    ?variante=snow
 ```
 
-L'heure ne change pas que la scène : elle repose aussi les couleurs de la
-page, qui viennent de la même table.
+L'heure ne change pas que la scène : elle repose aussi les couleurs de la page,
+qui viennent de la même table.
 
-### Les visages
+### Le verre
 
-Vingt et un portraits, photographies Unsplash, rapatriés dans le dépôt par
+Les panneaux sont en verre, au sens où Apple l'entend : translucidité et flou,
+clarté remontée, arête qui prend la lumière, reflet spéculaire en biais. Le
+cinquième ingrédient, la réfraction, ne s'écrit pas en CSS : aucune fonction de
+`backdrop-filter` ne déplace un pixel. Elle a été faite en filtre SVG, puis
+retirée : mesurée, elle coûtait 120 ms par image sur la machine de travail,
+pour une lentille qu'on ne voyait pas.
+
+### Les visages, d'où ils viennent
+
+Trente-trois portraits, photographies Unsplash, rapatriés dans le dépôt par
 `npm run visages` et servis par le site. Aucun n'est appelé chez un tiers à
 l'affichage. Les auteurs sont crédités dans `public/visages/PORTRAITS.md`.
 
 ## Les contrôles
 
-Ils se lancent sur la version construite, donc après `npm run build` et
-pendant que `npm run preview` tourne.
+Ils se lancent sur la version construite, donc après `npm run build` et pendant
+que `npm run preview` tourne.
 
 ```
 npm run interdits      ce qui trahit une interface faite à la machine
@@ -161,46 +175,43 @@ npm run banc -- --sans herbe      (ou terrain, pierres, ciel, meteo, bois, paysa
 npm run gardien        le gardien de cadence se fixe et se tait
 ```
 
-Chaque contrôle a sa contre-épreuve et tombe quand on la lance : un banc qui
-ne peut pas échouer ne mesure rien.
+Chaque contrôle a sa contre-épreuve et tombe quand on la lance : un banc qui ne
+peut pas échouer ne mesure rien.
 
 ### Ce que ça coûte
 
 Mesuré le 22 septembre 2026 sur une Intel HD Graphics 4600, une carte intégrée
-de 2013, en 1440 × 900, au neuvième dixième et non à la moyenne. Les durées
-sont lues sur la carte graphique : le banc lit un pixel après chaque image, ce
-qui l'oblige à avoir fini.
+de 2013, en 1440 × 900, au neuvième dixième et non à la moyenne. Les durées sont
+lues sur la carte : le banc lit un pixel après chaque image, ce qui l'oblige à
+avoir fini.
 
-| | image | triangles |
-|---|---|---|
-| pleine résolution | 82,5 ms | 1 270 812 |
-| au plancher du gardien | 40,0 ms | |
+| | image | triangles | appels |
+|---|---|---|---|
+| pleine résolution | 68,1 ms | 546 944 | 11 |
+| au plancher du gardien | 35,9 ms | | |
 
-Ce que chaque pièce coûte, trouvé en la retirant et pas en le devinant :
+Le gardien de cadence mesure le vrai coût d'une image sur dix. Au-dessus de
+seize millisecondes il baisse la résolution par paliers jusqu'à trois
+cinquièmes, puis lâche la finesse de la carte d'ombre, puis la moitié de
+l'herbe, puis le flou du verre, puis se tait pour de bon. Il ne remonte jamais.
+Sur une machine qui tient la cadence, il ne touche à rien.
 
-| pièce | ce qu'elle coûte |
-|---|---|
-| le terrain | 22,3 ms |
-| l'herbe, 104 000 brins | 21,2 ms |
-| les pierres, 2 400 | 6,2 ms |
-| l'arbre, son feuillage et sa passe d'ombre | 30,4 ms |
+Deux mesures qui ont changé le code plus que n'importe quel raisonnement :
 
-Le paysage est celui de ThreeUI, à ses comptes : 91 800 triangles de terrain,
-192 000 de pierres, 936 000 d'herbe. Sur une carte de 2013 ça ne tient pas les
-soixante images par seconde, et la page le sait : le gardien de cadence mesure
-le vrai coût d'une image sur dix, baisse la résolution par paliers jusqu'à
-trois cinquièmes, puis lâche la finesse de la carte d'ombre, puis la moitié de
-l'herbe, puis se tait pour de bon. Il ne remonte jamais. Sur une machine qui
-tient la cadence, il ne touche à rien et le paysage complet est servi.
+- le flou du verre à 24 pixels de rayon sur trois panneaux faisait passer
+  l'image de 68 à 158 ms, et le filtre de réfraction SVG la poussait à 278. Le
+  flou est à 12 pixels et la réfraction est partie ;
+- le terrain à la finesse de la source coûtait 22,3 ms et l'herbe 21,2 ms, les
+  deux postes les plus chers, trouvés en retirant une pièce à la fois.
 
 ## Ce qui reste
 
-- Le fil est d'une épaisseur constante : au pied, où le fût est large, il se
-  voit plus qu'il ne devrait ; il faudrait qu'il s'affine avec la branche
-  qu'il suit.
+- 35,9 ms au plancher du gardien, soit vingt-huit images par seconde, au-dessus
+  du seuil de vingt millisecondes que la maison se fixe. Le banc le dit et ne le
+  cache pas. Le prochain levier serait le feuillage, seize mille cartes en
+  découpe alpha, qui n'a pas encore été mesuré seul.
 - `ANATOMIE.md` décrit le relevé du baobab, qui commandait la silhouette avant
-  que l'arbre ne soit refait à fourches. Ce qu'il dit de l'écorce reste vrai,
-  ce qu'il dit du fût et de la couronne ne l'est plus.
-- Sur la machine de travail, l'image tient 40 ms au plancher du gardien, soit
-  vingt-cinq images par seconde, au-dessus du seuil de vingt millisecondes que
-  la maison se fixe. Le banc le dit et ne le cache pas.
+  que l'arbre ne soit refait à fourches. Ce qu'il dit de l'écorce reste vrai, ce
+  qu'il dit du fût et de la couronne ne l'est plus.
+- Le mouton traverse la prairie à vingt-six unités du fût : selon l'angle, il
+  passe derrière l'arbre et on ne le voit pas de la vue de départ.

@@ -10,10 +10,14 @@
 // La source de tous les nombres est `references/paysage-threeui.md`, revision
 // e8aab48, fichier `public/landscape.html`.
 //
-// Rien n est rabote : ni le compte d herbe, ni celui des etoiles, ni la
-// finesse du terrain, et pas davantage sur telephone. Ce que ce paysage coute
-// se lit au banc, il ne se devine pas, et une version allegee qui lui
-// ressemble n est pas lui.
+// Trois comptes sont ramenes sous ceux de la source : la finesse du terrain,
+// le nombre de brins d herbe et celui des pierres. Chacun est dit en face du
+// nombre, avec ce qu il coutait au banc et pourquoi le reduire ne se voit pas
+// d ici. Ce ne sont pas des economies de principe : la source cadre son
+// paysage avec un objectif de dix degres depuis le ras du sol, nous tournons
+// autour d un arbre a quarante-deux degres, et ce que ce cadrage-la ne montre
+// pas n a pas a etre rendu. Les teintes, les bruits et les nuanceurs, eux, ne
+// bougent pas d un milleme.
 
 import {
   AmbientLight,
@@ -79,7 +83,10 @@ export function monterLePaysage(scene: Scene): Paysage {
   scene.add(ambiante)
   const soleil = new DirectionalLight(0xfff1dc, 1.12)
   soleil.castShadow = true
-  soleil.shadow.mapSize.set(3072, 3072)
+  // La source demande 3072. Elle ombre une tour de trente metres avec ses
+  // avant-toits ; nous ombrons un arbre, dont l ombre est une dentelle ou un
+  // texel de plus ou de moins ne se lit pas. 1536 coute le quart.
+  soleil.shadow.mapSize.set(1536, 1536)
   soleil.shadow.camera.near = 8
   soleil.shadow.camera.far = 110
   soleil.shadow.bias = -0.0009

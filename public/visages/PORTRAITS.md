@@ -27,3 +27,15 @@ servies par le site lui-meme.
 | mahouna-z | https://unsplash.com/photos/XvnVGXhNV94 | Ben Masora |
 | setondji-k | https://unsplash.com/photos/1K7yDWuamRA | Joshua Oluwagbemiga |
 | fatoumata-k | https://unsplash.com/photos/LakFt4OtKxg | Trésor Kande |
+| dossa-ks | https://unsplash.com/photos/GdfxGavRlFk | Ronal Santana |
+| nadege-ks | https://unsplash.com/photos/vSFTvOgI2Io | Lisa Marie Theck |
+| elom-as | https://unsplash.com/photos/eoLC-dFIG6s | John Onaeko |
+| sena-g | https://unsplash.com/photos/KqaCBwr-rJw | Picha HD |
+| kossi-g | https://unsplash.com/photos/1P6Py2h0WtA | Chidy Young |
+| afi-sa | https://unsplash.com/photos/vJUWnwT_Vag | Lisa Marie Theck |
+| edem-sa | https://unsplash.com/photos/sjuLxUOEMY8 | Ben Koorengevel |
+| lawson-ka | https://unsplash.com/photos/HNyTfMv3Tk8 | Michael Ali |
+| togbe-yk | https://unsplash.com/photos/ORTi8PwkVJE | Shane Ryan Herilalaina |
+| akouavi-yk | https://unsplash.com/photos/95AGS_Bb1Ng | Chidy Young |
+| rachidi-mk | https://unsplash.com/photos/p8qMRZXCLd0 | Melissa Askew |
+| colette-aw | https://unsplash.com/photos/0HNG4yqLR3k | Menor Degu |

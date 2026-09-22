@@ -3,32 +3,47 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Théophas Ainé</title>
+    <title>Arbre généalogique</title>
     <meta
       name="description"
-      content="La famille Théophas Ainé sur trois générations, portée par un baobab : le fût est la souche, chaque branche est quelqu un."
+      content="Quatre générations portées par un arbre : le fût est la souche, chaque branche est quelqu un."
     />
     <link rel="icon" href="/favicon.svg" />
     <link rel="stylesheet" href="./src/page.css" />
   </head>
   <body>
     <main id="scene">
-      <canvas id="arbre" aria-label="Le baobab de la famille Théophas Ainé, à tourner et à approcher"></canvas>
+      <canvas id="arbre" aria-label="L arbre de la famille, à tourner et à approcher"></canvas>
 
-      <header class="entete">
-        <h1>Théophas Ainé</h1>
-        <p id="compte" class="compte"></p>
-      </header>
+      <h1 class="titre verre">Arbre généalogique</h1>
 
-      <aside id="fiche" class="fiche" hidden aria-live="polite">
+      <aside id="fiche" class="fiche verre" hidden aria-live="polite">
         <button id="fermer-fiche" class="fermer" type="button" aria-label="Fermer la fiche">Fermer</button>
         <div id="fiche-contenu"></div>
       </aside>
 
-      <p class="gestes">
-        Glissez pour faire le tour de l arbre, approchez à la molette ou à deux doigts, touchez une branche pour ouvrir sa fiche.
-      </p>
+      <!-- La legende : une ligne par personne, son visage, son nom et ce qu on
+           raconte d elle. C est la table des matieres de l arbre, et c est la
+           qu on retrouve quelqu un qu on ne sait pas situer sur une branche. -->
+      <aside class="legende verre" aria-label="Les personnes de l arbre">
+        <ul id="legende-liste" class="legende-liste"></ul>
+      </aside>
     </main>
+
+    <!-- La refraction du verre.
+         `backdrop-filter` ne sait pas deplacer un pixel : aucune de ses
+         fonctions n est un deplacement, donc la lentille ne peut pas s ecrire
+         en CSS seul. Un filtre SVG, lui, sait le faire, et Chromium accepte
+         qu on le passe a backdrop-filter. La feuille de style ne s en sert que
+         la ou il est reconnu ; ailleurs il reste le flou, la saturation et le
+         reflet, qui font deja le verre. -->
+    <svg class="filtres" aria-hidden="true" focusable="false">
+      <filter id="refraction" x="-12%" y="-12%" width="124%" height="124%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.008 0.012" numOctaves="2" seed="9" result="onde" />
+        <feGaussianBlur in="onde" stdDeviation="3" result="ondeDouce" />
+        <feDisplacementMap in="SourceGraphic" in2="ondeDouce" scale="14" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </svg>
 
     <script type="module" src="./src/main.ts"></script>
   </body>

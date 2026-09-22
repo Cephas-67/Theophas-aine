@@ -10,9 +10,9 @@ import { compterLOssature, ossature, type Segment } from './squelette'
 import { fabriquerLeBois } from './bois'
 import { ecorce, feuillage, ombreDesFeuilles, partages } from './matieres'
 import { compterLeFeuillage, fabriquerLeFeuillage } from './feuillage'
-import { tirerLeFil } from './fil'
+import { monterLeVivant } from './vivant'
 import { poserLesEtiquettes, trierParDistance } from './etiquettes'
-import { annees, aPlat, compter, SOUCHE, type Personne } from './genealogie'
+import { annees, aPlat, generationDe, SOUCHE, type Personne } from './genealogie'
 
 const toile = document.getElementById('arbre') as HTMLCanvasElement
 const contenant = document.getElementById('scene') as HTMLElement
@@ -45,11 +45,10 @@ const houppier = fabriquerLeFeuillage(segments, feuillage())
 houppier.customDepthMaterial = ombreDesFeuilles()
 vue.scene.add(houppier)
 
-// Le fil de la genealogie : il monte du pied, suit le fut, se divise a chaque
-// enfant puis a chaque petit-enfant, et s arrete sous chaque visage. C est la
-// lecture de l arbre posee sur l arbre, du bas vers le haut.
-const fil = tirerLeFil(segments)
-vue.scene.add(fil.maillage)
+// Ce qui vit dans le paysage : les nuages qui derivent, un vol d oiseaux, les
+// papillons au-dessus de l herbe, et le mouton qui traverse la prairie. Quatre
+// cadences, quatre mesures publiees, aucune estimee a l oeil.
+const vivant = monterLeVivant(vue.scene)
 
 // Le cadrage vient apres le bois : il se prend sur la boite que l arbre occupe
 // pour de vrai, pas sur la hauteur nominale de la recette.
@@ -103,6 +102,9 @@ function choisir(id: string, bouger = true): void {
   partages.uSelection.value = rangDansLeBois(id)
   for (const etiquette of plaques.liste) {
     etiquette.element.classList.toggle('plaque-choisie', etiquette.personne.id === id)
+  }
+  for (const [ident, ligne] of lignesDeLegende) {
+    ligne.setAttribute('aria-current', ident === id ? 'true' : 'false')
   }
   ecrireLaFiche(id)
   // Au premier affichage la camera ne bouge pas : on montre l arbre entier
@@ -208,6 +210,7 @@ function boucle(maintenant: number): void {
   partages.uTemps.value += ecoule
   vue.gestes.update()
   vue.paysage.avancer(ecoule, vue.camera, azimutDeLaVue())
+  vivant.avancer(ecoule)
   trierParDistance(plaques, vue)
   surveiller(dessiner)
   plaques.rendu.render(vue.scene, vue.camera)
@@ -218,11 +221,49 @@ ajusterLesPlaques()
 window.addEventListener('resize', ajusterLesPlaques)
 requestAnimationFrame(boucle)
 
-// La legende : le compte des personnes se calcule, il ne s ecrit pas a la main.
-const compte = compter()
-const legende = document.getElementById('compte')
-if (legende) {
-  legende.textContent = `${compte.personnes} membres de la lignée et ${compte.unions} unions, sur trois générations`
+/**
+ * La legende : une ligne par personne, son visage, son nom et son recit.
+ *
+ * Elle est la table des matieres de l arbre. Retrouver quelqu un sur une
+ * couronne a quarante visages demande de savoir ou regarder ; ici on lit, on
+ * clique, et la camera va se poser sur sa branche.
+ *
+ * Le retrait de chaque ligne dit la generation, comme dans un arbre dessine a
+ * la main : c est le seul endroit de la page ou la filiation s ecrit au lieu
+ * de se voir.
+ */
+const liste = document.getElementById('legende-liste') as HTMLElement
+const lignesDeLegende = new Map<string, HTMLElement>()
+for (const personne of aPlat()) {
+  const ligne = document.createElement('li')
+  const bouton = document.createElement('button')
+  bouton.type = 'button'
+  bouton.className = `legende-ligne legende-g${generationDe(personne.id)}`
+
+  const visage = document.createElement('img')
+  visage.className = 'legende-visage'
+  visage.src = `visages/${personne.id}.jpg`
+  visage.alt = ''
+  visage.loading = 'lazy'
+  visage.decoding = 'async'
+  bouton.appendChild(visage)
+
+  const textes = document.createElement('span')
+  textes.className = 'legende-textes'
+  const nom = document.createElement('span')
+  nom.className = 'legende-nom'
+  nom.textContent = `${personne.prenom} ${personne.nom}, ${annees(personne)}`
+  const recit = document.createElement('span')
+  recit.className = 'legende-recit'
+  recit.textContent = personne.recit
+  textes.appendChild(nom)
+  textes.appendChild(recit)
+  bouton.appendChild(textes)
+
+  bouton.addEventListener('click', () => choisir(personne.id))
+  ligne.appendChild(bouton)
+  liste.appendChild(ligne)
+  lignesDeLegende.set(personne.id, bouton)
 }
 
 // Sur un grand ecran la fiche de la souche s ouvre d office, a cote de
@@ -236,9 +277,9 @@ const cout = {
   ...compterLOssature(segments),
   trianglesDuBois: bois.triangles,
   ...compterLeFeuillage(segments),
-  trianglesDuFil: fil.triangles,
   ...vue.paysage.cout,
+  ...vivant.cout,
   variante: vue.paysage.heure.id + ' / ' + vue.paysage.temps.id,
-  personnes: compte.total,
+  personnes: aPlat().length,
 }
 Object.assign(window as unknown as Record<string, unknown>, { theophas: { cout, vue, dessiner, alleger } })
