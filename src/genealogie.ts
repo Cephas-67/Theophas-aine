@@ -38,12 +38,17 @@ export type Personne = {
 }
 
 /**
- * La souche, et tout ce qui descend d elle : quatre generations.
+ * La souche, et tout ce qui descend d elle : quatre generations, seize
+ * personnes.
  *
- * Les huit petits-enfants nes avant 1985 ont eux-memes des enfants, les plus
- * jeunes pas encore, et c est pour ca que la quatrieme generation ne pousse
- * pas partout. Un arbre genealogique n est jamais regulier ; un arbre qui
- * l est a ete arrange.
+ * Il y en avait trente-trois. Sur une couronne de dix metres, trente-trois
+ * visages se touchaient : les branches ne se voyaient plus entre eux, et
+ * l arbre se lisait comme une grappe. Seize laissent a chacun sa branche, et
+ * la quatrieme generation est toujours la.
+ *
+ * Elle ne pousse pas partout, et c est voulu : Aicha n a pas d enfant dans
+ * l arbre. Un arbre genealogique n est jamais regulier ; un arbre qui l est a
+ * ete arrange.
  */
 export const SOUCHE: Personne = {
   id: 'theophas',
@@ -76,7 +81,6 @@ export const SOUCHE: Personne = {
           recit: "Charpentier là où son père était menuisier : il pose les charpentes que son frère dessine.",
           enfants: [
             { id: 'dossa-ks', prenom: 'Dossa', nom: 'Ainé', naissance: 2003, lieu: 'Cadjèhoun', metier: 'Apprenti charpentier', recit: "Il apprend le métier sur les chantiers de son père, et dessine déjà mieux que lui." },
-            { id: 'nadege-ks', prenom: 'Nadège', nom: 'Ainé', naissance: 2007, lieu: 'Cotonou', metier: 'Lycéenne', recit: "Elle veut être sage-femme comme sa tante Aïcha, et le dit depuis ses huit ans." },
           ],
         },
         {
@@ -87,9 +91,6 @@ export const SOUCHE: Personne = {
           lieu: 'Cotonou',
           metier: 'Sage-femme',
           recit: "Sage-femme à Cotonou, elle a mis au monde deux des enfants de cet arbre.",
-          enfants: [
-            { id: 'elom-as', prenom: 'Elom', nom: 'Ainé', naissance: 2006, lieu: 'Cotonou', metier: 'Lycéen', recit: "Il court le huit cents mètres pour le lycée de Cotonou, et gagne souvent." },
-          ],
         },
         {
           id: 'gblewa',
@@ -101,7 +102,6 @@ export const SOUCHE: Personne = {
           recit: "Développeur à Akpakpa. C'est lui qui a fait cet arbre.",
           enfants: [
             { id: 'sena-g', prenom: 'Séna', nom: 'Ainé', naissance: 2011, lieu: 'Akpakpa', metier: 'Écolière', recit: "Elle avait nommé toutes les branches de cet arbre avant qu'il ne soit fait." },
-            { id: 'kossi-g', prenom: 'Kossi', nom: 'Ainé', naissance: 2014, lieu: 'Akpakpa', metier: 'Écolier', recit: "Le plus jeune de la lignée. Il ne sait pas encore qu'il est au bout d'une branche." },
           ],
         },
       ],
@@ -126,19 +126,6 @@ export const SOUCHE: Personne = {
           recit: "Pêcheur à Ganvié comme son père, il relève les nasses avant le jour.",
           enfants: [
             { id: 'afi-sa', prenom: 'Afi', nom: 'Agossou', naissance: 2001, lieu: 'Ganvié', metier: 'Mareyeuse', recit: "Elle a repris le commerce de sa grand-mère Ayélé, sur le même ponton." },
-            { id: 'edem-sa', prenom: 'Edem', nom: 'Agossou', naissance: 2004, lieu: 'Ganvié', metier: 'Pêcheur', recit: "Il sort avec son père depuis ses douze ans et connaît le lac par temps de brume." },
-          ],
-        },
-        {
-          id: 'kpedetin-a',
-          prenom: 'Kpédétin',
-          nom: 'Agossou',
-          naissance: 1978,
-          lieu: 'Grand-Popo',
-          metier: 'Institutrice',
-          recit: "Institutrice à Grand-Popo, elle tient la classe de CM2 depuis quinze ans.",
-          enfants: [
-            { id: 'lawson-ka', prenom: 'Lawson', nom: 'Agossou', naissance: 2005, lieu: 'Grand-Popo', metier: 'Étudiant', recit: "Il prépare le concours d'instituteur, ce que sa mère ne lui a jamais demandé." },
           ],
         },
       ],
@@ -163,29 +150,7 @@ export const SOUCHE: Personne = {
           recit: "Il a repris le garage de son père, et le premier camion roule encore.",
           enfants: [
             { id: 'togbe-yk', prenom: 'Togbé', nom: 'Ainé', naissance: 2008, lieu: 'Parakou', metier: 'Collégien', recit: "Il démonte les moteurs du garage et les remonte, presque toujours entiers." },
-            { id: 'akouavi-yk', prenom: 'Akouavi', nom: 'Ainé', naissance: 2012, lieu: 'Parakou', metier: 'Écolière', recit: "Elle tient la caisse du marché le samedi, et ne se trompe jamais." },
           ],
-        },
-        {
-          id: 'mariam-k',
-          prenom: 'Mariam',
-          nom: 'Ainé',
-          naissance: 1984,
-          lieu: 'Parakou',
-          metier: 'Commerçante',
-          recit: "Commerçante à Parakou, elle fournit en pagnes tout le marché du nord.",
-          enfants: [
-            { id: 'rachidi-mk', prenom: 'Rachidi', nom: 'Ainé', naissance: 2010, lieu: 'Parakou', metier: 'Écolier', recit: "Il accompagne sa mère au marché et porte les pagnes plus vite qu'elle." },
-          ],
-        },
-        {
-          id: 'zinsou-k',
-          prenom: 'Zinsou',
-          nom: 'Ainé',
-          naissance: 1988,
-          lieu: 'Cotonou',
-          metier: 'Agronome',
-          recit: "Agronome, il travaille sur les variétés de maïs qui tiennent la saison sèche.",
         },
       ],
     },
@@ -210,75 +175,6 @@ export const SOUCHE: Personne = {
           enfants: [
             { id: 'colette-aw', prenom: 'Colette', nom: 'Amoussou', naissance: 2009, lieu: 'Dantokpa', metier: 'Collégienne', recit: "Elle coud à la main à côté de sa mère, sur les chutes de tissu." },
           ],
-        },
-        {
-          id: 'comlan-w',
-          prenom: 'Comlan',
-          nom: 'Amoussou',
-          naissance: 1986,
-          lieu: 'Fidjrossè',
-          metier: 'Photographe',
-          recit: "Photographe à Fidjrossè. La plupart des portraits de famille sont de lui.",
-        },
-      ],
-    },
-    {
-      id: 'zinsou',
-      prenom: 'Zinsou',
-      nom: 'Ainé',
-      naissance: 1961,
-      lieu: 'Godomey',
-      metier: 'Instituteur',
-      recit: "Instituteur à Godomey, il a appris à lire à plus d'enfants qu'il n'y a de maisons dans la rue.",
-      union: { prenom: 'Mariam', nom: 'Sagbo', naissance: 1966, origine: 'Abomey' },
-      enfants: [
-        {
-          id: 'ake-z',
-          prenom: 'Aké',
-          nom: 'Ainé',
-          naissance: 1990,
-          lieu: 'Godomey',
-          metier: 'Infirmière',
-          recit: "Infirmière à Godomey, elle a fait le même choix que sa tante sans le savoir.",
-        },
-        {
-          id: 'mahouna-z',
-          prenom: 'Mahouna',
-          nom: 'Ainé',
-          naissance: 1993,
-          lieu: 'Cotonou',
-          metier: 'Étudiante',
-          recit: "Étudiante en droit à Cotonou, la première de la famille à l'université.",
-        },
-      ],
-    },
-    {
-      id: 'kofi',
-      prenom: 'Kofi',
-      nom: 'Ainé',
-      naissance: 1965,
-      lieu: 'Marina',
-      metier: 'Forgeron',
-      recit: "Le benjamin. Forgeron à la Marina, il répare ce que personne d'autre n'accepte de regarder.",
-      union: { prenom: 'Wassa', nom: 'Dossou', naissance: 1970, origine: 'Cadjèhoun' },
-      enfants: [
-        {
-          id: 'setondji-k',
-          prenom: 'Sètondji',
-          nom: 'Ainé',
-          naissance: 1992,
-          lieu: 'Marina',
-          metier: 'Soudeur',
-          recit: "Soudeur à la Marina, il porte le prénom de son oncle aîné.",
-        },
-        {
-          id: 'fatoumata-k',
-          prenom: 'Fatoumata',
-          nom: 'Ainé',
-          naissance: 1996,
-          lieu: 'Cotonou',
-          metier: 'Comptable',
-          recit: "Comptable à Cotonou, elle tient les livres de trois entreprises du quartier.",
         },
       ],
     },

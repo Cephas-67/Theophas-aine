@@ -322,4 +322,4 @@ const cout = {
   variante: vue.paysage.heure.id + ' / ' + vue.paysage.temps.id,
   personnes: aPlat().length,
 }
-Object.assign(window as unknown as Record<string, unknown>, { theophas: { cout, vue, dessiner, alleger } })
+Object.assign(window as unknown as Record<string, unknown>, { theophas: { cout, vue, dessiner, alleger, vivant } })

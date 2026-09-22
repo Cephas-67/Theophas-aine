@@ -3,7 +3,7 @@
 La famille Théophas Ainé en volume, plantée dans une prairie. Le fût est la
 souche, chaque branche est quelqu'un : un enfant au premier rang, un
 petit-enfant au deuxième, un arrière-petit-enfant au troisième. Quatre
-générations, 33 personnes. On tourne autour au doigt, on s'approche, on touche
+générations, 16 personnes. On tourne autour au doigt, on s'approche, on touche
 un visage pour lire qui c'est.
 
 ![L'arbre au milieu de la prairie, à midi](vues/jour.jpg)
@@ -107,38 +107,43 @@ restent nets à tout zoom et ne coûtent aucun appel de dessin.
 
 ### Ce qui vit dans le paysage
 
-Des nuages qui dérivent, un vol d'oiseaux, des papillons au-dessus de l'herbe,
-un mouton qui marche. Quatre géométries montées à la main, aucun fichier 3D.
+Des nuages qui dérivent, un vol d'oiseaux qui passe, quelques papillons
+au-dessus de l'herbe, un mouton qui broute. Tout est monté à la main, aucun
+fichier 3D.
 
-Les cadences viennent de mesures publiées :
-
-| | cadence | source |
+| | ce qu'il fait | source |
 |---|---|---|
-| nuage | 2,5 unités/s | le cumulus dérive à 5 à 10 mph selon la NOAA, soit 2,2 à 4,5 m/s |
-| oiseau | 7,6 battements/s | fréquence mesurée en vol libre pour les oiseaux qui alternent battements et plané |
-| papillon | 6 battements/s, 1,45 unité/s | mesurés sur *Pieris*, formes de printemps et d'été |
-| mouton | 1,1 unité/s | allure confortable relevée sur tapis de pression |
+| nuage | dérive à 2,5 m/s | le cumulus dérive à 5 à 10 mph selon la NOAA |
+| oiseau | 2,3 battements/s, 9,7 m/s | le goéland argenté, et les 35 km/h de son vol le plus économe |
+| papillon | 6 battements/s, 0,4 à 1,3 m/s | *Pieris* pour le battement ; vitesses de papillons en vol libre (PMC10807088) |
+| mouton | 1,1 m/s au pas | allure confortable relevée sur tapis de pression |
 
-Les silhouettes aussi sont relevées, et c'est ce qui manquait : deux triangles
-plats ne font ni un oiseau ni un papillon, quelle que soit la cadence à
-laquelle ils battent.
+**Les oiseaux** reprennent ceux de kondo, trait pour trait : un « M » sombre
+dessiné par deux courbes, en deux poses, ailes hautes et ailes basses. Un vol
+de cinq en V lâche traverse le ciel en ligne droite derrière l'arbre, chacun un
+peu décalé et un peu plus ou moins vite que le premier, et ils battent à
+0,11 s d'intervalle, jamais ensemble. Puis le ciel reste vide quelques
+secondes. Ils tournaient en rond autour du fût, ce qu'aucun oiseau ne fait, et
+battaient à 7,6 par seconde, la cadence d'un petit oiseau : à cette taille ça
+grésillait. Kondo bat en 0,46 s, le goéland à 2,3 par seconde, les deux
+concordent.
 
-| | forme | source |
-|---|---|---|
-| oiseau | allongement d'aile 8, corps 0,41 envergure | la valeur donnée pour les laridés, contre 15 chez l'albatros et 4,5 à 6 chez un passereau |
-| papillon | allongement d'aile antérieure 1,77 | mesuré sur les formes printanières de *Pieris* |
+**Les papillons** sont cinq, et non quatorze. Ils n'ont plus de trajectoire
+calculée d'avance : chacun avance pas à pas, son cap dérive sans cesse et il
+revient vers son coin de prairie quand il s'en éloigne. Son corps monte à
+chaque abattée et retombe à chaque remontée, et il alterne une rafale de
+battements et un court plané ailes ouvertes pendant lequel il se laisse
+descendre. C'est la trajectoire erratique qu'on mesure sur tous les papillons
+en vol libre. La forme de l'aile est celle de *Pieris* (allongement 1,77) ; la
+livrée celle du petit monarque, *Danaus chrysippus*, qui vole au Bénin.
 
-L'aile de l'oiseau plie au poignet et non à l'épaule : relevée d'un bloc, elle
-donnait un arc régulier et l'oiseau se lisait comme un boomerang. Le papillon,
-lui, se tourne vers l'œil. Posé à plat comme l'oiseau, il était vu depuis une
-caméra qui se tient dix-huit degrés au-dessus de lui, donc écrasé à trois
-dixièmes dans le sens de la marche : il ne restait qu'une fléchette orange.
+**Le mouton** est une grappe de boules de laine, une tête sombre au bout d'une
+encolure, deux oreilles tombantes et quatre pattes minces. Il marche quelques
+pas, s'arrête, baisse la tête jusqu'à l'herbe et broute, puis repart ailleurs
+sans quitter son coin de pré, à gauche de l'arbre.
 
-Les deux sont à l'échelle du regard et non à celle de la nature. L'oiseau fait
-2,7 à 3,5 unités d'envergure, le double d'un goéland ; le papillon 1,24, soit
-vingt-cinq fois nature. Les proportions, elles, sont justes. Sa livrée est
-celle du petit monarque, *Danaus chrysippus*, qui vole au Bénin : le blanc
-crème de la piéride se perdait sur l'herbe pâle de midi.
+Les bêtes sont à l'échelle du regard et non à celle de la nature : un
+papillon grandeur nature ne ferait pas un pixel à trente mètres.
 
 Une unité de scène vaut un mètre : l'arbre fait dix mètres, l'herbe vingt
 centimètres, le plat s'étend sur cent mètres.
@@ -212,19 +217,28 @@ avoir fini.
 
 | | image | triangles | appels |
 |---|---|---|---|
-| pleine résolution | 64,0 à 68,6 ms | 549 006 | 12 |
-| au plancher du gardien | 36,4 à 47,4 ms | | |
+| pleine résolution, 33 personnes | 64,0 à 68,6 ms | 549 006 | 12 |
+| pleine résolution, 16 personnes | non repris au calme | 525 156 | 13 |
 
-Trois passages de suite sur la même carte, le même code. La pleine résolution
-tient dans cinq millisecondes ; le plancher, lui, monte à chaque passage, ce qui
-ressemble à une carte qui chauffe et non à une scène qui pèse plus. Le chiffre
-bas est celui du premier passage, carte froide ; il n'a pas été repris au calme.
+La version à seize personnes a moins de triangles et un appel de plus, pour la
+tête du mouton qui s'abaisse à part. Sa durée n'a pas pu être mesurée
+proprement : pendant le passage, la même carte rendait aussi la page ouverte
+dans un autre navigateur, et la médiane a sauté de 50 à 112 ms d'un passage à
+l'autre pour le même code. Un chiffre pareil ne dit rien de la scène ; il n'est
+pas reporté ici.
 
 Le gardien de cadence mesure le vrai coût d'une image sur dix. Au-dessus de
-seize millisecondes il baisse la résolution par paliers jusqu'à trois
-cinquièmes, puis lâche la finesse de la carte d'ombre, puis la moitié de
-l'herbe, puis le flou du verre, puis se tait pour de bon. Il ne remonte jamais.
-Sur une machine qui tient la cadence, il ne touche à rien.
+seize millisecondes il lâche, un palier à chaque constat, la finesse de la
+carte d'ombre, la moitié de l'herbe, le flou du verre, puis la résolution d'un
+dixième à la fois jusqu'à quatre cinquièmes, et se tait pour de bon. Il ne
+remonte jamais. Sur une machine qui tient la cadence, il ne touche à rien.
+
+La résolution passait en premier, jusqu'à trois cinquièmes : c'était le flou
+qu'on voyait sur l'arbre. Et chaque palier de résolution redimensionnait la
+toile juste après l'avoir dessinée ; une toile redimensionnée est effacée, et
+comme elle est transparente, le fond pâle de la page passait à sa place pendant
+une image. C'était le clignotement. Elle est maintenant redessinée dans la même
+image.
 
 Deux mesures qui ont changé le code plus que n'importe quel raisonnement :
 
@@ -236,12 +250,12 @@ Deux mesures qui ont changé le code plus que n'importe quel raisonnement :
 
 ## Ce qui reste
 
-- 36,4 à 47,4 ms au plancher du gardien, soit vingt à vingt-sept images par seconde, au-dessus
-  du seuil de vingt millisecondes que la maison se fixe. Le banc le dit et ne le
-  cache pas. Le prochain levier serait le feuillage, près de dix-sept mille
-  cartes en découpe alpha, qui n'a pas encore été mesuré seul.
+- Le plancher du gardien reste au-dessus du seuil de vingt millisecondes que la
+  maison se fixe, et la durée de la version à seize personnes est à reprendre
+  sur une carte que rien d'autre n'occupe. Le banc le dit et ne le cache pas.
 - `ANATOMIE.md` décrit le relevé du baobab, qui commandait la silhouette avant
   que l'arbre ne soit refait à fourches. Ce qu'il dit de l'écorce reste vrai, ce
   qu'il dit du fût et de la couronne ne l'est plus.
-- Le mouton traverse la prairie à quinze unités du fût, là où elle est vide ;
-  à vingt-six il passait derrière l'arbre une fois sur deux.
+- Les dix-sept personnes retirées de l'arbre sont parties avec leur portrait et
+  leur ligne de crédit : rien ne reste dans `public/visages/` qui ne soit
+  affiché.

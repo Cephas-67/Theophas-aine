@@ -128,10 +128,11 @@ export function suivreLaTaille(vue: Vue, contenant: HTMLElement): () => void {
  *
  * Le banc a mesure l image a 28 ms sur une carte integree de 2013, a pleine
  * resolution : trente-cinq images par seconde. Plutot que de servir une scene
- * pauvre a tout le monde, la page regarde ce qu elle tient et baisse sa
- * resolution de rendu d un cinquieme a chaque constat, jusqu a trois
- * cinquiemes au plus bas. Elle ne remonte jamais : une resolution qui monte
- * et descend se voit, une resolution qui baisse une fois ne se voit pas.
+ * pauvre a tout le monde, la page regarde ce qu elle tient et lache, un
+ * palier a chaque constat, la finesse de l ombre, la moitie de l herbe, le
+ * flou du verre, puis la resolution d un dixieme a la fois jusqu a quatre
+ * cinquiemes au plus bas. Elle ne remonte jamais : ce qui monte et descend se
+ * voit.
  *
  * Ce qu elle regarde, c est le vrai cout d une image sur la carte, et non
  * l intervalle entre deux images : celui-ci ne voit pas la carte. Mesure le
@@ -229,18 +230,30 @@ export function gardienDeCadence(vue: Vue): (dessiner: () => void) => void {
       decide = true
       return
     }
-    // D abord la resolution, qui ne se voit pas. Ensuite seulement ce qui se
-    // voit un peu, et dans l ordre de ce que le banc a mesure.
-    if (vue.echelle > 0.6) {
-      vue.echelle = Math.max(0.6, vue.echelle * 0.8)
-      vue.rendu.domElement.dispatchEvent(new Event('reechelle'))
-      premieres = 10 // la toile vient d etre reallouee
-      return
-    }
+    // D abord ce qui ne se voit presque pas : la finesse de l ombre, la moitie
+    // de l herbe, le flou du verre. La resolution vient en dernier, et ne
+    // descend plus qu a quatre cinquiemes.
+    //
+    // Elle passait en premier et jusqu a trois cinquiemes, sur l idee qu une
+    // resolution qui baisse ne se voit pas. Elle se voit : Cephas a trouve
+    // l arbre flou, et c etait ca. L herbe a moitie se remarque moins qu une
+    // image entiere adoucie.
     if (allege < 3) {
       allege += 1
       alleger(vue, allege)
       premieres = 10 // la carte d ombre vient d etre refaite
+      return
+    }
+    if (vue.echelle > 0.8) {
+      vue.echelle = Math.max(0.8, vue.echelle * 0.9)
+      vue.rendu.domElement.dispatchEvent(new Event('reechelle'))
+      // Redimensionner une toile l efface. Le changement tombait juste apres
+      // l image de la mesure : la toile restait vide jusqu a l image suivante,
+      // et comme elle est transparente, le fond pale de la page passait a sa
+      // place. C est le clignotement qu on voyait de temps en temps, une fois
+      // par palier. On redessine donc tout de suite, dans la meme image.
+      dessiner()
+      premieres = 10 // la toile vient d etre reallouee
       return
     }
     decide = true

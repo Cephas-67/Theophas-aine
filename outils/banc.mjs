@@ -83,7 +83,7 @@ try {
     // carte d ombre et la moitie de l herbe. Le banc doit mesurer l image que
     // la personne voit reellement sur cette carte, pas une image intermediaire
     // qui n existe a aucun moment.
-    if (part <= 0.6 && window.theophas.alleger) {
+    if (part <= 0.8 && window.theophas.alleger) {
       window.theophas.alleger(vue, 1)
       window.theophas.alleger(vue, 2)
       window.theophas.alleger(vue, 3)
@@ -152,7 +152,7 @@ try {
     return { ...passes[0], mediane: milieu('mediane'), neuviemeDixieme: milieu('neuviemeDixieme') }
   }
   const mesure = await troisFois(1)
-  const auPlancher = await troisFois(0.6)
+  const auPlancher = await troisFois(0.8)
 
   const logiciel = /swiftshader|software|llvmpipe|basic render/i.test(mesure.rendeur)
   console.log(adresse + (saboter ? '   (sabote : la scene rendue 25 fois par image)' : '') + (sans ? '   (sans : ' + sans + ')' : ''))

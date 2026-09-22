@@ -32,7 +32,7 @@ try {
     await new Promise((f) => setTimeout(f, 1000))
     fin.push(await page.evaluate(() => window.theophas.vue.echelle))
   }
-  const PALIERS = [1, 0.8, 0.64, 0.6]
+  const PALIERS = [1, 0.9, 0.81, 0.8]
   const stable = fin.every((e) => e === fin[0])
   const permis = PALIERS.some((p) => Math.abs(p - fin[0]) < 0.001)
   bon = stable && permis

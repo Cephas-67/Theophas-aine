@@ -263,7 +263,7 @@ function fourcher(
  * dans `genealogie.ts` ne demande pas une ligne ici.
  *
  * L ordre de la fratrie suit la convention genealogique : l aine a gauche, le
- * benjamin a droite, en tournant par l avant de l arbre. Les six enfants
+ * benjamin a droite, en tournant par l avant de l arbre. Les enfants
  * s etagent sur le dernier huitieme du fut, l aine le plus bas, parce qu une
  * branche basse est une branche vieille.
  */
@@ -273,17 +273,24 @@ export function ossature(): Segment[] {
   segments.push(tronc)
 
   const enfants = SOUCHE.enfants ?? []
+  // Le tour est tourne pour qu aucune maitresse ne pointe droit sur la vue de
+  // depart. A quatre branches posees sur les axes, deux partaient vers
+  // l objectif et deux a l oppose : a l ecran elles se superposaient au fut, et
+  // leurs visages avec. Decalees d un quart de tour autour de la ligne de
+  // visee, les quatre s ecartent de biais, deux a gauche, deux a droite.
+  const face = 0.26
   enfants.forEach((enfant: Personne, i: number) => {
     const part = i / Math.max(1, enfants.length)
-    // Le tour complet et non les cinq sixiemes : les six departs sont presque
-    // au meme endroit, et laisser un secteur vide ouvrirait un trou franc.
-    const azimut = Math.PI - part * Math.PI * 2
-    // Quarante-six degres d ecart a la verticale. Plus ferme, les six branches
-    // montaient en gerbe serree et les visages se touchaient a l ecran ; c est
-    // l ouverture qui aere la couronne, pas la longueur.
-    const ecart = 0.80 + dedans() * 0.18
+    // Le tour complet : les departs sont presque au meme endroit, et laisser
+    // un secteur vide ouvrirait un trou franc.
+    const azimut = Math.PI - part * Math.PI * 2 + face
+    // Cinquante-cinq a soixante-trois degres d ecart a la verticale, et non
+    // quarante-six a cinquante-six. C est l ouverture qui aere la couronne, pas
+    // la longueur : plus fermees, les branches montaient en gerbe et les
+    // visages se touchaient a l ecran.
+    const ecart = 0.96 + dedans() * 0.14
     const sens = new Vector3(Math.cos(azimut) * Math.sin(ecart), Math.cos(ecart), Math.sin(azimut) * Math.sin(ecart))
-    const longueur = MESURES.rayonDeCouronne * (0.78 + dedans() * 0.14)
+    const longueur = MESURES.rayonDeCouronne * (0.86 + dedans() * 0.12)
     const maitresse: Segment = {
       personne: enfant.id,
       rang: 1,
@@ -327,9 +334,18 @@ function pousserLaSuite(
   // L ouverture s elargit d une generation a l autre : les branches y sont
   // plus courtes, et une fourche qui garderait le meme angle donnerait des
   // bouts de plus en plus serres, donc des visages colles.
-  const sorties = ouvrirLaFourche(capDuBout(parent.ligne), enfants.length, 0.52 + rang * 0.07)
+  //
+  // Une sortie de plus que d enfants : le rameau qui ne porte personne.
+  // Avec seize personnes, la plupart n ont qu un enfant, et une branche qui
+  // ne se divise qu en une seule ne fourche pas, elle se prolonge : l arbre
+  // devenait une poignee de baguettes. Et le feuillage ne pousse qu au bout
+  // des rameaux ; sans celui-ci, dix personnes sur seize n en auraient porte
+  // aucun, et la couronne perdait les deux tiers de ses feuilles.
+  const sorties = ouvrirLaFourche(capDuBout(parent.ligne), enfants.length + 1, 0.64 + rang * 0.08)
+  const rameau = sorties[enfants.length]
+  fourcher(parent.bout, rameau, 1, longueur * 0.9, parent.rayonBout * 0.8, segments)
   enfants.forEach((enfant: Personne, j: number) => {
-    const longueurIci = longueur * (0.70 + dedans() * 0.12)
+    const longueurIci = longueur * (0.74 + dedans() * 0.12)
     const branche: Segment = {
       personne: enfant.id,
       rang,
