@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "barre": "vite --mode barre",
     "build": "vite build",
     "preview": "vite preview",
     "banc": "node outils/banc.mjs",
@@ -13,7 +14,8 @@
     "tiers": "node outils/tiers.mjs",
     "visages": "node outils/visages.mjs",
     "voir": "node outils/voir.mjs",
-    "interdits": "node outils/interdits.mjs"
+    "interdits": "node outils/interdits.mjs",
+    "banc:telephone": "node outils/banc.mjs --ecran 390x844"
   },
   "dependencies": {
     "three": "^0.134.0"

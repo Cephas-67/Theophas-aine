@@ -34,6 +34,14 @@ const saboter = process.argv.includes('--saboter')
 const rangSans = process.argv.indexOf('--sans')
 const sans = rangSans === -1 ? '' : process.argv[rangSans + 1]
 
+// L ecran mesure. La maison juge d abord le telephone : 390 sur 844, la taille
+// d un ecran courant, et c est `npm run banc:telephone`. Une scene qui tient a
+// 1440 sur 900 peut tomber sur un telephone, ou la densite de pixels double le
+// nombre de pixels a remplir.
+const rangEcran = process.argv.indexOf('--ecran')
+const [largeur, hauteur] = (rangEcran === -1 ? '1440x900' : process.argv[rangEcran + 1])
+  .split('x').map(Number)
+
 /** Les seuils, et d ou ils viennent. */
 const SEUILS = {
   // Le seuil de la maison, celui de kondo/outils/controle-fluidite.mjs : vingt
@@ -65,7 +73,7 @@ const navigateur = await puppeteer.launch({
 let echecs = 0
 try {
   const page = await navigateur.newPage()
-  await page.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1 })
+  await page.setViewport({ width: largeur, height: hauteur, deviceScaleFactor: 1 })
   await page.goto(adresse, { waitUntil: 'networkidle0', timeout: 45000 })
   await page.waitForFunction(() => window.theophas && window.theophas.vue, { timeout: 20000 })
 

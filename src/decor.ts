@@ -272,6 +272,7 @@ export function gardienDeCadence(vue: Vue): (dessiner: () => void) => void {
  * calcul, lui, se croyait juste.
  */
 export function cadrerLArbre(vue: Vue, boite: Box3): void {
+  const etroit = vue.camera.aspect < 1
   const demiHauteur = (vue.camera.fov * Math.PI) / 360
   const demiLargeur = Math.atan(Math.tan(demiHauteur) * vue.camera.aspect)
   const taille = boite.getSize(new Vector3())
@@ -279,7 +280,10 @@ export function cadrerLArbre(vue: Vue, boite: Box3): void {
   // La visee se pose au milieu de la boite, un peu bas : on regarde l arbre,
   // pas le ciel au-dessus, et laisser la visee remonter avec la cime poussait
   // l horizon hors de l image.
-  vue.gestes.target.set(0, centre.y * 0.86, 0)
+  // Un peu plus haut sur un ecran droit : la visee au milieu bas laissait un
+  // quart d ecran de pre vide sous l arbre, alors que le haut porte le ciel et
+  // ses nuages. On prefere donner cette place au ciel qu a l herbe.
+  vue.gestes.target.set(0, centre.y * (vue.camera.aspect < 1 ? 1.0 : 0.86), 0)
   const demiLarge = Math.max(taille.x, taille.z) / 2
   const demiHaut = Math.max(centre.y - boite.min.y, boite.max.y - vue.gestes.target.y)
   // Deux marges et non une : sur un ecran large c est la hauteur qui commande
@@ -303,9 +307,16 @@ export function cadrerLArbre(vue: Vue, boite: Box3): void {
   // et de l herbe vides. On recadre plutot que de rapetisser : la marge en
   // largeur passe sous un, la couronne sort du cadre par les cotes, et les
   // visages retrouvent leur taille. Ce qui deborde, ce sont des feuilles.
-  const etroit = vue.camera.aspect < 1
-  const pourLaLargeur = (demiLarge * (etroit ? 0.84 : 1.16)) / Math.tan(demiLargeur)
-  const pourLaHauteur = (demiHaut * 1.30) / Math.tan(demiHauteur)
+  //
+  // Un objectif plus long a ete essaye a la place : ca ne change rien. A
+  // largeur d arbre imposee, la hauteur couverte vaut cette largeur divisee
+  // par le rapport de l ecran, quel que soit l angle de l objectif, parce que
+  // la camera recule d autant. Le seul levier est bien la marge en largeur.
+  const pourLaLargeur = (demiLarge * (etroit ? 0.72 : 1.16)) / Math.tan(demiLargeur)
+  // Moins de marge en hauteur sur un ecran droit : le champ vertical y est
+  // enorme devant l arbre, et avec la meme marge qu en large il restait un
+  // tiers de ciel vide en haut et un tiers de pre vide en bas.
+  const pourLaHauteur = (demiHaut * (etroit ? 1.12 : 1.30)) / Math.tan(demiHauteur)
   const voulu = Math.max(pourLaLargeur, pourLaHauteur)
   // La butee de recul suit le cadrage au lieu de le contrarier.
   //

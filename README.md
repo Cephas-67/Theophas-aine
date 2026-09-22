@@ -23,6 +23,24 @@ ou une ligne de la liste pour ouvrir la fiche. La liste des personnes est
 repliée derrière le bouton en haut à droite : l'arbre est le sujet, la liste
 est un recours. Échap referme ce qui est ouvert.
 
+Pour regarder la scène et ses chiffres en même temps :
+
+```
+npm run barre          # http://localhost:5179
+```
+
+C'est la barre d'atelier GOD2, un greffon Vite posé sur un mode à part. Le
+signe s'ouvre en bas à gauche : elle donne six écrans d'appareils avec leur
+coque, une bride de réseau réelle (3G lente, 3G rapide, 4G), et une sonde qui
+compte pendant qu'on fait défiler : images par seconde, pire image, tâches
+longues de plus de 50 ms, décalage de mise en page, premier affichage, octets
+reçus et mémoire prise.
+
+Elle n'est **pas** sur `npm run dev`, et c'est voulu : elle tourne en continu,
+et le banc la comptait comme un coût de l'arbre. Elle vit dans les outils de la
+maison à côté du dépôt ; si ce dossier n'est pas là, `npm run barre` le dit et
+sert la page sans elle. Elle ne part jamais dans `dist/`.
+
 Pour voir la version construite, celle qu'on met en ligne :
 
 ```
@@ -202,6 +220,7 @@ npm run tiers -- --casser
 npm run banc           le cout de l image sur la carte graphique
 npm run banc -- --saboter
 npm run banc -- --sans herbe      (ou terrain, pierres, ciel, meteo, bois, paysage, tout)
+npm run banc:telephone le même banc en 390 × 844, le format de référence
 npm run gardien        le gardien de cadence se fixe et se tait
 ```
 
@@ -215,17 +234,26 @@ de 2013, en 1440 × 900, au neuvième dixième et non à la moyenne. Les durées
 lues sur la carte : le banc lit un pixel après chaque image, ce qui l'oblige à
 avoir fini.
 
-| | image | triangles | appels |
+| écran | image | triangles | appels |
 |---|---|---|---|
-| pleine résolution, 33 personnes | 64,0 à 68,6 ms | 549 006 | 12 |
-| pleine résolution, 16 personnes | non repris au calme | 525 156 | 13 |
+| 1440 × 900 | 129,3 ms | 525 156 | 13 |
+| 390 × 844, `npm run banc:telephone` | 74,3 ms | 521 916 | 11 |
 
-La version à seize personnes a moins de triangles et un appel de plus, pour la
-tête du mouton qui s'abaisse à part. Sa durée n'a pas pu être mesurée
-proprement : pendant le passage, la même carte rendait aussi la page ouverte
-dans un autre navigateur, et la médiane a sauté de 50 à 112 ms d'un passage à
-l'autre pour le même code. Un chiffre pareil ne dit rien de la scène ; il n'est
-pas reporté ici.
+**Ces durées ne se comparent qu'entre elles, dans le même passage.** Cette
+carte ne rend pas la même chose d'une heure à l'autre : le même code a donné
+50 ms de médiane le matin et 112 l'après-midi. Un chiffre pris seul ne dit donc
+rien. Ce qui dit quelque chose, c'est l'écart mesuré dans la foulée, la version
+d'avant et celle d'après servies l'une après l'autre :
+
+| | neuvième dixième | médiane | triangles |
+|---|---|---|---|
+| 33 personnes, commit `bb8badc` | 138,8 ms | 114,6 ms | 549 006 |
+| 16 personnes | 129,3 ms | 112,3 ms | 525 156 |
+
+La version allégée est donc un peu plus rapide, et non l'inverse. Le
+téléphone coûte 74 ms pour six fois moins de pixels que le grand écran : le
+coût n'est pas dans le remplissage, il est dans les triangles et la passe
+d'ombre. C'est là qu'il faudra couper.
 
 Le gardien de cadence mesure le vrai coût d'une image sur dix. Au-dessus de
 seize millisecondes il lâche, un palier à chaque constat, la finesse de la
@@ -240,7 +268,12 @@ comme elle est transparente, le fond pâle de la page passait à sa place pendan
 une image. C'était le clignotement. Elle est maintenant redessinée dans la même
 image.
 
-Deux mesures qui ont changé le code plus que n'importe quel raisonnement :
+Trois mesures qui ont changé le code plus que n'importe quel raisonnement :
+
+- le tracé des oiseaux fabriquait six petits tableaux par segment et par
+  image, près de mille par image : le ramasse-miettes prenait une image
+  entière de temps en temps. La médiane tenait à 50 ms, le neuvième dixième
+  montait à 120. Les bords passent maintenant par un tableau fixe ;
 
 - le flou du verre à 24 pixels de rayon sur trois panneaux faisait passer
   l'image de 68 à 158 ms, et le filtre de réfraction SVG la poussait à 278. Le

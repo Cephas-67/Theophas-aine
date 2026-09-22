@@ -32,6 +32,18 @@
    Les noms francais du projet sont definis a partir de ces jetons-la, et non
    l inverse : une seule table de couleurs, celle de la source. */
 :root {
+  /* La marge d ecran, et les quatre retraits de l appareil.
+
+     `viewport-fit=cover` fait passer la page sous l encoche et sous la barre
+     de geste : sans ces retraits, le titre passait derriere la barre du bas et
+     le bouton de la liste sous l encoche des telephones a coins ronds. Sur un
+     ecran sans encoche, les quatre valent zero et rien ne change. */
+  --marge: clamp(12px, 2.6vw, 26px);
+  --bord-haut: calc(var(--marge) + env(safe-area-inset-top, 0px));
+  --bord-bas: calc(var(--marge) + env(safe-area-inset-bottom, 0px));
+  --bord-gauche: calc(var(--marge) + env(safe-area-inset-left, 0px));
+  --bord-droite: calc(var(--marge) + env(safe-area-inset-right, 0px));
+
   --paper: #dfe3e2;
   --w0: #f6f8f8;
   --w1: #e9eeef;
@@ -190,7 +202,7 @@ body {
    la partie pleine de l image ; en bas il est sur la prairie, qui est vide. */
 .titre {
   position: absolute;
-  bottom: clamp(14px, 2.6vw, 26px);
+  bottom: var(--bord-bas);
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
@@ -212,8 +224,8 @@ body {
    est porte par aria-controls. */
 .menu {
   position: absolute;
-  top: clamp(14px, 2.6vw, 26px);
-  right: clamp(14px, 2.6vw, 26px);
+  top: var(--bord-haut);
+  right: var(--bord-droite);
   z-index: 3;
   display: flex;
   align-items: center;
@@ -285,9 +297,9 @@ body {
      document : sans rang declare, les visages de l arbre passaient par-dessus
      le verre et les noms se lisaient a travers eux. */
   z-index: 2;
-  top: calc(clamp(14px, 2.6vw, 26px) + 52px);
-  right: clamp(14px, 2.6vw, 26px);
-  bottom: clamp(14px, 2.6vw, 26px);
+  top: calc(var(--bord-haut) + 52px);
+  right: var(--bord-droite);
+  bottom: var(--bord-bas);
   width: min(310px, 34vw);
   padding: 6px;
   border-radius: 18px;
@@ -439,6 +451,28 @@ body {
     box-shadow 0.15s var(--courbe);
 }
 
+/* La cible du doigt : quarante-quatre pixels, quoi que mesure le rond.
+
+   Sur un telephone le medaillon fait trente-deux pixels de large et le doigt
+   en couvre quarante-cinq : on visait un rond plus petit que ce qu on pose
+   dessus, et on ouvrait la fiche du voisin. La zone sensible est donc portee
+   par un pseudo-element, ce qui l agrandit sans agrandir le dessin. Elle ne
+   sort que pour un pointeur grossier : a la souris, une cible large de
+   quarante-quatre pixels ferait se recouvrir deux medaillons voisins et
+   volerait le clic de l autre. */
+@media (pointer: coarse) {
+  .plaque::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+  }
+}
+
 .plaque:hover,
 .plaque:focus-visible {
   border-color: var(--ocean);
@@ -500,8 +534,8 @@ body {
 /* La fiche d une personne */
 .fiche {
   position: absolute;
-  top: clamp(14px, 2.6vw, 26px);
-  left: clamp(14px, 2.6vw, 26px);
+  top: var(--bord-haut);
+  left: var(--bord-gauche);
   width: min(330px, calc(100vw - 32px));
   padding: 20px 22px 22px;
   border-radius: 18px;
@@ -568,9 +602,9 @@ body {
      elle : les deux ne peuvent pas tenir cote a cote sur 390 pixels. */
   .legende {
     top: auto;
-    left: 12px;
-    right: 12px;
-    bottom: 12px;
+    left: var(--bord-gauche);
+    right: var(--bord-droite);
+    bottom: var(--bord-bas);
     width: auto;
     height: 46vh;
     transform-origin: 100% 100%;
@@ -584,8 +618,8 @@ body {
   /* Le mot ne tient pas a cote des barres sur 390 pixels : il reste un bouton
      rond, et c est aria-controls qui dit ce qu il ouvre. */
   .menu {
-    top: 12px;
-    right: 12px;
+    top: var(--bord-haut);
+    right: var(--bord-droite);
     padding: 11px;
     gap: 0;
   }
@@ -598,7 +632,7 @@ body {
      haut : remonte juste au-dessus du bandeau, il tombait en plein sur les
      visages de la deuxieme generation. En haut il n y a que du ciel. */
   .titre {
-    top: 12px;
+    top: var(--bord-haut);
     bottom: auto;
     padding: 7px 14px;
     font-size: 15px;
@@ -606,9 +640,9 @@ body {
 
   .fiche {
     top: auto;
-    right: 12px;
-    left: 12px;
-    bottom: 12px;
+    right: var(--bord-droite);
+    left: var(--bord-gauche);
+    bottom: var(--bord-bas);
     width: auto;
     padding: 16px 16px 18px;
     z-index: 2;
@@ -616,19 +650,34 @@ body {
 
   /* Sur trois cent quatre-vingt-dix pixels de large, les ronds se serrent :
      on les reduit d un quart plutot que de cacher des gens. */
+  /* Les visages remontent d un cinquieme : avec seize personnes au lieu de
+     trente-trois, la couronne a la place, et un visage de vingt pixels ne se
+     reconnaissait pas. */
   .plaque-visage {
-    width: 28px;
-    height: 28px;
+    width: 34px;
+    height: 34px;
   }
 
   .plaque-0 .plaque-visage {
-    width: 40px;
-    height: 40px;
+    width: 46px;
+    height: 46px;
   }
 
   .plaque-2 .plaque-visage {
-    width: 20px;
-    height: 20px;
+    width: 26px;
+    height: 26px;
+  }
+
+  /* Dans la liste aussi : un visage de vingt-six pixels sur un telephone
+     tenu a bout de bras ne dit pas qui c est. */
+  .legende-g2 .legende-visage,
+  .legende-g3 .legende-visage {
+    width: 32px;
+    height: 32px;
+  }
+
+  .legende-ligne {
+    padding: 9px 8px;
   }
 
   .plaque-decalee-haut {
