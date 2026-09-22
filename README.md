@@ -23,23 +23,26 @@ ou une ligne de la liste pour ouvrir la fiche. La liste des personnes est
 repliée derrière le bouton en haut à droite : l'arbre est le sujet, la liste
 est un recours. Échap referme ce qui est ouvert.
 
-Pour regarder la scène et ses chiffres en même temps :
+### La barre d'atelier GOD2
 
-```
-npm run barre          # http://localhost:5179
-```
-
-C'est la barre d'atelier GOD2, un greffon Vite posé sur un mode à part. Le
-signe s'ouvre en bas à gauche : elle donne six écrans d'appareils avec leur
-coque, une bride de réseau réelle (3G lente, 3G rapide, 4G), et une sonde qui
-compte pendant qu'on fait défiler : images par seconde, pire image, tâches
+Elle est posée sur le serveur de développement : son signe s'ouvre en bas à
+gauche de la page, dès `npm run dev`. Elle donne six écrans d'appareils avec
+leur coque, une bride de réseau réelle (3G lente, 3G rapide, 4G) et une sonde
+qui compte pendant qu'on fait défiler : images par seconde, pire image, tâches
 longues de plus de 50 ms, décalage de mise en page, premier affichage, octets
 reçus et mémoire prise.
 
-Elle n'est **pas** sur `npm run dev`, et c'est voulu : elle tourne en continu,
-et le banc la comptait comme un coût de l'arbre. Elle vit dans les outils de la
-maison à côté du dépôt ; si ce dossier n'est pas là, `npm run barre` le dit et
-sert la page sans elle. Elle ne part jamais dans `dist/`.
+Elle ne fausse pas la mesure de référence : le banc ne lit pas ce serveur, il
+lit la version construite servie par `preview`, où le greffon n'entre jamais.
+Pour juger la scène à l'œil sans rien de posé dessus :
+
+```
+npm run dev:nu
+```
+
+Elle vit dans les outils de la maison à côté du dépôt ; si ce dossier n'est pas
+là, `npm run dev` le dit et sert la page sans elle. Elle ne part jamais dans
+`dist/`.
 
 Pour voir la version construite, celle qu'on met en ligne :
 

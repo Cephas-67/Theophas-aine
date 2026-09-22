@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "barre": "vite --mode barre",
+    "dev:nu": "vite --mode nu",
     "build": "vite build",
     "preview": "vite preview",
     "banc": "node outils/banc.mjs",

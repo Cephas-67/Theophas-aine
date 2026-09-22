@@ -1,14 +1,19 @@
 // GOD2 · Theophas Aine : le projet se construit et se sert seul.
 //
-//   npm run dev       developpement, port 5177
-//   npm run barre     developpement avec la barre GOD2, port 5179
+//   npm run dev       developpement avec la barre GOD2, port 5177
+//   npm run dev:nu    le meme sans la barre, quand on juge la scene a l oeil
 //   npm run build     version construite, dans dist/
 //   npm run preview   version construite servie, port 5178
 //
-// La barre de mesure GOD2 n est pas posee sur `dev`, et c est voulu : elle
-// tourne en continu, et le banc de la piece la comptait comme un cout de
-// l arbre. Elle a donc son mode a elle. Ainsi on peut regarder la scene et ses
-// chiffres en meme temps sans que la mesure de reference en herite.
+// La barre de mesure GOD2 est posee sur le serveur de developpement, et elle
+// n y gene pas la mesure de reference : le banc ne lit pas ce serveur, il lit
+// la version construite servie par `preview`, ou le greffon n entre jamais
+// (`apply: 'serve'`). On regarde donc la scene et ses chiffres en meme temps
+// sans que le banc en herite.
+//
+// Elle a d abord ete mise sur un mode a part, par prudence. C etait un mode de
+// trop : on lance `npm run dev`, on ne la voit pas, et un outil qu il faut
+// savoir demander n est pas un outil.
 
 import { existsSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
@@ -37,11 +42,11 @@ export default defineConfig(async ({ mode }) => ({
   // les visages de la famille et l icone vivent ici, pour que l arbre se
   // construise et se serve sans rien emprunter a cote.
   publicDir: path.resolve(__dirname, 'public'),
-  plugins: mode === 'barre' ? await barreSiPresente() : [],
+  plugins: mode === 'nu' ? [] : await barreSiPresente(),
   build: {
     outDir: path.resolve(__dirname, 'dist'),
     emptyOutDir: true,
   },
-  server: { port: mode === 'barre' ? 5179 : 5177, strictPort: true },
+  server: { port: 5177, strictPort: true },
   preview: { port: 5178, strictPort: true },
 }))
