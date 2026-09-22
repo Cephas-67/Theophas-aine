@@ -89,7 +89,17 @@ la légende, et c'est ce qu'une famille garde d'un parent quand les dates ne
 disent plus rien.
 
 Pour lui donner un visage, ajoutez sa ligne dans `outils/visages.mjs` et
-relancez `npm run visages`. Sans ça, son rond s'affiche vide et rien ne casse.
+relancez `npm run visages`. Sans ça, son rond s'affiche clair et vide : c'est
+prévu, on écrit d'abord la personne et on cherche la photo après.
+
+**L'arbre grandit tout seul.** Sa hauteur suit le nombre de rangs de la
+descendance, cinq et demi plus une hauteur et demie par rang : trois rangs font
+dix, quatre font onze et demi, cinq font treize. Et la couronne s'élargit dès
+qu'un rang dépasse six personnes, jusqu'à une fois et demie. Une génération
+ajoutée trouve donc la place de ses branches au lieu de se serrer dans
+l'existant, et le cadrage se reprend sur la boîte que le bois occupe vraiment.
+Vérifié en ajoutant une cinquième génération : l'arbre monte et s'élargit,
+les visages gardent leur écart.
 
 ## Comment c'est fait
 

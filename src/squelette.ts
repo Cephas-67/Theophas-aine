@@ -22,6 +22,28 @@ import { Vector3 } from 'three'
 import { SOUCHE, type Personne } from './genealogie'
 
 /**
+ * Ce que la famille mesure : combien de rangs elle descend, et combien de
+ * personnes tient son rang le plus large.
+ *
+ * C est de la que l arbre tire sa taille. Une famille qui gagne une generation
+ * gagne un etage de branches : si l arbre garde la meme hauteur, cet etage se
+ * loge dans ce qui existe deja et les visages se serrent. Et une fratrie plus
+ * nombreuse a besoin d une couronne plus large pour la meme raison.
+ */
+function mesurerLaFamille(racine: Personne): { rangs: number; largeurMax: number } {
+  const parRang: number[] = []
+  const pile: { personne: Personne; rang: number }[] = [{ personne: racine, rang: 0 }]
+  while (pile.length > 0) {
+    const { personne, rang } = pile.shift() as { personne: Personne; rang: number }
+    parRang[rang] = (parRang[rang] ?? 0) + 1
+    for (const enfant of personne.enfants ?? []) pile.push({ personne: enfant, rang: rang + 1 })
+  }
+  return { rangs: parRang.length - 1, largeurMax: Math.max(...parRang) }
+}
+
+export const FAMILLE = mesurerLaFamille(SOUCHE)
+
+/**
  * La hauteur de l arbre, en unites de scene. Tout le reste en decoule.
  *
  * Dix, ce qui place l arbre a l echelle reelle du paysage : une lame d herbe y
@@ -38,7 +60,17 @@ import { SOUCHE, type Personne } from './genealogie'
  * lame d herbe de vingt centimetres fait quatre pixels vue par la tranche :
  * la prairie redevenait un aplat.
  */
-export const HAUTEUR = 10
+/**
+ * Cinq et demi, plus une hauteur et demie par rang de descendance.
+ *
+ * La famille d aujourd hui descend de trois rangs sous la souche, ce qui fait
+ * dix : exactement la valeur qui etait ecrite en dur ici, et l arbre ne change
+ * donc pas d un pouce. Mais une cinquieme generation ajoutee dans
+ * `genealogie.ts` porte maintenant l arbre a onze et demi, une sixieme a
+ * treize, sans qu on ait rien a regler. C est la regle de la piece : la
+ * genealogie commande la forme, jamais l inverse.
+ */
+export const HAUTEUR = 5.5 + 1.5 * FAMILLE.rangs
 
 /** Les proportions lues sur l image de reference, en hauteurs d arbre. */
 const P = {
@@ -50,12 +82,26 @@ const P = {
   rayonSousLaFourcheSurHauteur: 0.017,
 }
 
+/**
+ * L elargissement de la couronne quand la fratrie grossit.
+ *
+ * Il ne joue qu au-dela de six personnes sur un meme rang, ce qui est le rang
+ * le plus large d aujourd hui : l arbre actuel garde donc sa couronne au
+ * centimetre pres, et seule une famille plus nombreuse l ecarte. Plafonne a
+ * une fois et demie, parce qu au-dela la couronne deborde du cadre bien avant
+ * que les visages ne se genent.
+ */
+const ELARGISSEMENT = Math.min(1.5, 1 + 0.055 * Math.max(0, FAMILLE.largeurMax - 6))
+
 export const MESURES = {
   hauteur: HAUTEUR,
   rayonAuPied: P.rayonAuPiedSurHauteur * HAUTEUR,
   rayonSousLaFourche: P.rayonSousLaFourcheSurHauteur * HAUTEUR,
   fourche: P.futSurHauteur * HAUTEUR,
-  rayonDeCouronne: P.demiCouronneSurHauteur * HAUTEUR,
+  rayonDeCouronne: P.demiCouronneSurHauteur * HAUTEUR * ELARGISSEMENT,
+  /** Ce que la famille mesure, pour le banc et pour la page. */
+  rangs: FAMILLE.rangs,
+  largeurMax: FAMILLE.largeurMax,
 }
 
 export type Segment = {

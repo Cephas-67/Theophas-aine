@@ -249,6 +249,7 @@ for (const personne of aPlat()) {
   visage.alt = ''
   visage.loading = 'lazy'
   visage.decoding = 'async'
+  visage.addEventListener('error', () => { visage.classList.add('visage-manquant') })
   bouton.appendChild(visage)
 
   const textes = document.createElement('span')

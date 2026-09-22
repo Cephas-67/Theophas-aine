@@ -213,6 +213,7 @@ body {
   letter-spacing: -0.01em;
   color: var(--ink);
   pointer-events: none;
+  z-index: 2;
 }
 
 /* Le bouton de la liste.
@@ -429,6 +430,17 @@ body {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  /* Le calque des medaillons est isole, et il passe dessous.
+
+     Le rendu CSS2D de three ecrit lui-meme un `z-index` sur chaque etiquette,
+     du plus loin au plus proche, pour que les visages de devant couvrent ceux
+     de derriere. Sans contexte d empilement a eux, ces rangs se comparaient a
+     ceux des panneaux de la page : liste ouverte sur telephone, les visages de
+     l arbre passaient par-dessus le verre et les noms se lisaient a travers.
+     `isolation` enferme ces rangs ici, et ce calque entier se range sous les
+     panneaux. */
+  z-index: 1;
+  isolation: isolate;
 }
 
 /* Le medaillon, et rien d autre.
@@ -499,6 +511,18 @@ body {
   margin: 14px 0 0 -12px;
 }
 
+/* Un portrait qui manque : un rond clair, et rien de plus.
+   Le navigateur remplace une image introuvable par son icone de page dechiree,
+   qui se lit comme une panne du site alors que c est seulement une photo qu on
+   n a pas encore. */
+.visage-manquant {
+  background: var(--pl-b);
+  /* Le texte de remplacement et l icone du navigateur disparaissent tous les
+     deux avec la couleur de texte transparente ; la boite, elle, reste. */
+  color: transparent;
+  object-fit: cover;
+}
+
 .plaque-visage {
   display: block;
   width: 36px;
@@ -534,6 +558,7 @@ body {
 /* La fiche d une personne */
 .fiche {
   position: absolute;
+  z-index: 2;
   top: var(--bord-haut);
   left: var(--bord-gauche);
   width: min(330px, calc(100vw - 32px));
@@ -607,6 +632,10 @@ body {
     bottom: var(--bord-bas);
     width: auto;
     height: 46vh;
+    /* Plus couvrant qu ailleurs : sur un telephone le panneau tombe sur la
+       couronne, qui est la partie sombre et chargee de l image, et un recit de
+       onze pixels et demi ne tient pas sur des feuilles. */
+    background: hsl(210 40% 100% / 0.68);
     transform-origin: 100% 100%;
     transform: translateY(8px) scale(0.98);
   }

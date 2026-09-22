@@ -88,6 +88,12 @@ export function poserLesEtiquettes(vue: Vue, segments: Segment[], contenant: HTM
     // arrive en retard ne derange personne.
     visage.loading = 'lazy'
     visage.decoding = 'async'
+    // Quelqu un peut etre ajoute dans la genealogie avant d avoir son portrait,
+    // et c est meme le cas courant : on ecrit la personne, on cherche la photo
+    // apres. Sans ceci le navigateur dessine son icone d image cassee dans le
+    // rond, ce qui a l air d une panne. La place reste tenue, le rond reste
+    // clair, et le nom est toujours au bouton.
+    visage.addEventListener('error', () => { visage.classList.add('visage-manquant') })
     element.appendChild(visage)
 
     // Le tronc porte son nom a mi-hauteur et non a sa cime, ou il serait
