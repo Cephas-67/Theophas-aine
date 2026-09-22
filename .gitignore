@@ -1,0 +1,7 @@
+node_modules/
+dist/
+
+# Le dossier de sources de ThreeUI n est pas redistribue : c est leur code,
+# sous leur licence. Il sert de reference de travail en local, et tout ce qui
+# en a ete tire est reecrit dans src/paysage/, qui est notre code.
+references/paysage-threeui.md

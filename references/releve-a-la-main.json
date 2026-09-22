@@ -1,0 +1,77 @@
+{
+  "methode": "Lectures faites a l oeil sur grille-tronc.jpg, un recadrage de baobab-senegal.jpg grossi deux fois et quadrille tous les 25 pixels. Coordonnees en pixels de la photographie d origine, 1920x1440. Precision de lecture : huit pixels.",
+  "fichier": "baobab-senegal.jpg",
+  "sol": {
+    "derniereLigneDuFut": 1130,
+    "note": "Sous cette ligne les herbes hautes cachent le pied : la hauteur mesuree est celle du sommet a cette ligne, donc une borne basse."
+  },
+  "fut": [
+    {
+      "y": 615,
+      "gauche": 910,
+      "droite": 1080
+    },
+    {
+      "y": 690,
+      "gauche": 895,
+      "droite": 1070
+    },
+    {
+      "y": 790,
+      "gauche": 888,
+      "droite": 1060
+    },
+    {
+      "y": 890,
+      "gauche": 885,
+      "droite": 1055
+    },
+    {
+      "y": 1040,
+      "gauche": 882,
+      "droite": 1052
+    },
+    {
+      "y": 1115,
+      "gauche": 876,
+      "droite": 1055
+    }
+  ],
+  "fourche": {
+    "premiereBranche": 875,
+    "divisionDuFut": 600,
+    "note": "La premiere branche maitresse quitte le fut a 875, le fut se divise entierement a 600. Lu sur grille-tronc.jpg."
+  },
+  "branchesMaitresses": [
+    {
+      "nom": "gauche basse",
+      "departY": 800,
+      "boutX": 385,
+      "boutY": 800
+    },
+    {
+      "nom": "gauche haute",
+      "departY": 640,
+      "boutX": 500,
+      "boutY": 260
+    },
+    {
+      "nom": "droite basse",
+      "departY": 660,
+      "boutX": 1640,
+      "boutY": 700
+    },
+    {
+      "nom": "droite haute",
+      "departY": 620,
+      "boutX": 1450,
+      "boutY": 190
+    },
+    {
+      "nom": "centrale",
+      "departY": 600,
+      "boutX": 900,
+      "boutY": 60
+    }
+  ]
+}

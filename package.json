@@ -1,0 +1,27 @@
+{
+  "name": "theophas-aine",
+  "version": "1.0.0",
+  "private": true,
+  "description": "L arbre de la famille Theophas Aine, en volume, dans un paysage procedural.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "banc": "node outils/banc.mjs",
+    "gardien": "node outils/gardien.mjs",
+    "tiers": "node outils/tiers.mjs",
+    "visages": "node outils/visages.mjs",
+    "voir": "node outils/voir.mjs",
+    "interdits": "node outils/interdits.mjs"
+  },
+  "dependencies": {
+    "three": "^0.134.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.134.0",
+    "puppeteer-core": "^25.8.0",
+    "typescript": "^5.5.3",
+    "vite": "^5.4.21"
+  }
+}

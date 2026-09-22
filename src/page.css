@@ -1,0 +1,399 @@
+/* GOD2 · Theophas Aine : la page
+   Les valeurs viennent de regles/FINITION.md : l encre, le gris de texte, la
+   courbe, les durees. La police est celle du depot, servie par nous : aucun
+   octet ne vient d un domaine tiers. */
+
+@font-face {
+  font-family: 'Wura Mi';
+  src: url('/fonts/wuramibygemmas/WuraMiByGemmaS.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Wura Mi';
+  src: url('/fonts/wuramibygemmas/WuraMiByGemmaS-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+
+/* Les jetons de l heure.
+
+   Ceux qui commencent par --paper, --ink, --w et --pl ne sont pas ecrits ici :
+   c est la scene qui les pose, au montage, en recopiant le bloc `css` de
+   l heure choisie dans references/paysage-threeui.md. Midi les rend clairs,
+   la nuit sombres, le coucher orangés, et la page change avec le ciel sans
+   qu on ait a tenir deux jeux de couleurs en parallele.
+
+   Les valeurs ecrites ci-dessous sont celles de MIDI, la variante demandee.
+   Elles servent de repli : la page est peinte avant que la scene ne soit
+   montee, et sans elles le premier affichage sort en noir sur noir.
+
+   Les noms francais du projet sont definis a partir de ces jetons-la, et non
+   l inverse : une seule table de couleurs, celle de la source. */
+:root {
+  --paper: #dfe3e2;
+  --w0: #f6f8f8;
+  --w1: #e9eeef;
+  --w2: #dde3e4;
+  --ink: #232a2c;
+  --ink2: #7f8788;
+  --ink3: #333c3e;
+  --accent: #9a5a2c;
+  --line: #c8cfd0;
+  --rule2: #b2babb;
+  --pl-a: #fbfcfc;
+  --pl-b: #eaeeef;
+  --pl-br: #d3d9da;
+  --pl-fg: #333c3e;
+
+  --encre: var(--ink);
+  --encre-douce: var(--ink3);
+  --gris: var(--ink2);
+  --surface: var(--w1);
+  --plaque: var(--pl-a);
+  --bordure: var(--pl-br);
+  --ambre: var(--accent);
+  /* Le bleu de la charte, qui ne vient pas du paysage et n a pas a en venir :
+     c est la marque, pas la meteo. */
+  --ocean: hsl(229 97% 55%);
+  --limonade: hsl(71 88% 56%);
+  --rayon: 0.5rem;
+  --courbe: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: var(--paper);
+  color: var(--encre);
+  font-family: 'Wura Mi', system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Le ciel n est plus peint ici.
+
+   Tant qu il n y avait qu un degrade vertical, le peindre en CSS derriere une
+   toile transparente epargnait un remplissage d ecran par image. Ce paysage a
+   un horizon : le degrade est enroule sur une voute de 900 unites de rayon,
+   il doit passer derriere les collines et tourner quand on tourne. Un degrade
+   colle a l ecran, lui, ne tourne pas, et l horizon glissait dessus.
+
+   Ce qui reste ici est la couleur de repli, celle qu on voit le temps que la
+   scene se monte. */
+#scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--paper);
+}
+
+#arbre {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  touch-action: none;
+}
+
+#arbre:active {
+  cursor: grabbing;
+}
+
+/* Le fond derriere l entete n est pas toujours le ciel : de pres ou vu de
+   haut, c est la terre qui passe dessous, et de nuit c est parfois le pied du
+   fut en pleine lumiere chaude. Une plaque, comme celle des noms, tient sur
+   les trois. */
+.entete {
+  position: absolute;
+  top: clamp(16px, 3vw, 32px);
+  left: clamp(16px, 3vw, 32px);
+  max-width: 22ch;
+  padding: 10px 14px;
+  border-radius: var(--rayon);
+  background: var(--w0);
+  border: 1px solid var(--line);
+  pointer-events: none;
+}
+
+.entete h1 {
+  margin: 0;
+  font-size: clamp(28px, 5vw, 42px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.compte {
+  margin: 6px 0 0;
+  color: var(--gris);
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+/* Les noms portes par les branches */
+.plaques {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.plaque {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px 5px 5px;
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon);
+  background: linear-gradient(var(--pl-a), var(--pl-b));
+  color: var(--pl-fg);
+  font-family: inherit;
+  text-align: left;
+  white-space: nowrap;
+  pointer-events: auto;
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: opacity 0.2s var(--courbe), border-color 0.15s var(--courbe),
+    background-color 0.15s var(--courbe);
+}
+
+.plaque:hover,
+.plaque:focus-visible {
+  border-color: var(--ocean);
+  background: var(--surface);
+  outline: none;
+}
+
+.plaque-choisie {
+  border-color: var(--ocean);
+  box-shadow: 0 0 0 2px hsl(229 97% 55% / 0.26);
+}
+
+/* Le quinconce des enfants : un frere plus haut, le suivant plus bas, pour
+   que deux etiquettes voisines ne se touchent pas au premier cadrage.
+   Le rendu CSS2D de three pose son propre `transform` en ligne a chaque
+   image pour placer l etiquette, et un style en ligne gagne toujours sur une
+   regle de feuille : une classe qui touche `transform` ici n a donc aucun
+   effet, ce qui a ete verifie sur le DOM rendu. La marge, elle, deplace la
+   boite avant que ce transform ne s applique, et s additionne bel et bien. */
+.plaque-decalee-haut {
+  margin: -48px 0 0 40px;
+}
+
+.plaque-decalee-bas {
+  margin: 48px 0 0 -40px;
+}
+
+/* Le medaillon. Le rond est fait au bord arrondi et le cadrage par
+   object-fit : l image arrive deja rognee sur le visage a 192 pixels de cote,
+   donc carree, et ce rond n a rien a redresser. */
+.plaque-visage {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--pl-b);
+}
+
+.plaque-textes {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+/* La souche porte le sien plus grand : c est la tete de la famille. */
+.plaque-0 .plaque-visage {
+  width: 44px;
+  height: 44px;
+}
+
+.plaque-2 .plaque-visage {
+  width: 26px;
+  height: 26px;
+}
+
+.plaque-nom {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.plaque-annees,
+.plaque-union {
+  color: var(--gris);
+  font-size: 11px;
+  line-height: 1.25;
+}
+
+/* La souche porte son nom plus gros : c est la tete de la famille. */
+.plaque-0 .plaque-nom {
+  font-size: 17px;
+}
+
+.plaque-2 {
+  padding: 4px 8px;
+  background: var(--pl-b);
+}
+
+.plaque-2 .plaque-nom {
+  font-size: 12px;
+}
+
+.plaque-effacee {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* La fiche d une personne */
+.fiche {
+  position: absolute;
+  top: clamp(16px, 3vw, 32px);
+  right: clamp(16px, 3vw, 32px);
+  width: min(340px, calc(100vw - 32px));
+  padding: 20px 22px 22px;
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon);
+  background: var(--w0);
+}
+
+.fiche[hidden] {
+  display: none;
+}
+
+.fiche h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.fiche-annees {
+  margin: 2px 0 14px;
+  color: var(--gris);
+  font-size: 14px;
+}
+
+.fiche dl {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  gap: 6px 12px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.fiche dt {
+  color: var(--gris);
+}
+
+.fiche dd {
+  margin: 0;
+}
+
+.fermer {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 4px 10px;
+  border: 1px solid var(--bordure);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--encre-douce);
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: color 0.15s var(--courbe), border-color 0.15s var(--courbe);
+}
+
+.fermer:hover {
+  color: var(--encre);
+  border-color: var(--encre);
+}
+
+.gestes {
+  position: absolute;
+  left: clamp(16px, 3vw, 32px);
+  bottom: clamp(16px, 3vw, 24px);
+  max-width: 44ch;
+  margin: 0;
+  padding: 6px 12px;
+  border-radius: var(--rayon);
+  background: var(--w0);
+  border: 1px solid var(--line);
+  color: var(--encre-douce);
+  font-size: 13px;
+  line-height: 1.45;
+  pointer-events: none;
+}
+
+@media (max-width: 720px) {
+  .fiche {
+    top: auto;
+    right: 12px;
+    left: 12px;
+    bottom: 12px;
+    width: auto;
+    padding: 16px 16px 18px;
+  }
+
+  .gestes {
+    display: none;
+  }
+
+  .plaque-2 {
+    display: none;
+  }
+
+  /* Sur un telephone l etiquette ne porte que le nom : les annees et l union
+     couvraient la couronne, et elles sont dans la fiche au premier toucher. */
+  .plaque {
+    padding: 3px 7px;
+  }
+
+  .plaque-nom {
+    font-size: 12px;
+  }
+
+  .plaque-0 .plaque-nom {
+    font-size: 14px;
+  }
+
+  .plaque-annees,
+  .plaque-union {
+    display: none;
+  }
+
+  /* Sur trois cent quatre-vingt-dix pixels de large, six noms cote a cote se
+     recouvrent quoi qu on fasse. Le medaillon, lui, tient : la troisieme
+     generation n est plus qu un visage, et le nom s ouvre au premier toucher
+     dans la fiche. */
+  .plaque-2 .plaque-textes {
+    display: none;
+  }
+
+  .plaque-2 {
+    padding: 3px;
+  }
+
+  /* Le quinconce garde son decalage en hauteur, qui sert toujours, et perd
+     celui de cote : sur 390 pixels de large, les 26 pixels qui ecartaient deux
+     etiquettes voisines poussaient celle de l aine hors de l ecran, ou son nom
+     etait coupe. En hauteur il n y a pas de bord a heurter. */
+  .plaque-decalee-haut {
+    margin: -46px 0 0 0;
+  }
+
+  .plaque-decalee-bas {
+    margin: 46px 0 0 0;
+  }
+}

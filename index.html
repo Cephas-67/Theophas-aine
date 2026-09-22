@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Théophas Ainé</title>
+    <meta
+      name="description"
+      content="La famille Théophas Ainé sur trois générations, portée par un baobab : le fût est la souche, chaque branche est quelqu un."
+    />
+    <link rel="icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="./src/page.css" />
+  </head>
+  <body>
+    <main id="scene">
+      <canvas id="arbre" aria-label="Le baobab de la famille Théophas Ainé, à tourner et à approcher"></canvas>
+
+      <header class="entete">
+        <h1>Théophas Ainé</h1>
+        <p id="compte" class="compte"></p>
+      </header>
+
+      <aside id="fiche" class="fiche" hidden aria-live="polite">
+        <button id="fermer-fiche" class="fermer" type="button" aria-label="Fermer la fiche">Fermer</button>
+        <div id="fiche-contenu"></div>
+      </aside>
+
+      <p class="gestes">
+        Glissez pour faire le tour de l arbre, approchez à la molette ou à deux doigts, touchez une branche pour ouvrir sa fiche.
+      </p>
+    </main>
+
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

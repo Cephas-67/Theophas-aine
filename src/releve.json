@@ -1,0 +1,150 @@
+{
+  "source": "Wikimedia Commons, images citees dans ANATOMIE.md",
+  "teintes": {
+    "baobab-senegal.jpg": {
+      "taille": "1920x1440",
+      "ecorceClaire": {
+        "pixels": 27150,
+        "median": "#584735",
+        "sombre": "#382b21",
+        "clair": "#947a61",
+        "ecartDeLumiere": 80
+      },
+      "ecorceOmbre": {
+        "pixels": 3784,
+        "median": "#5a4d35",
+        "sombre": "#433723",
+        "clair": "#7d694d",
+        "ecartDeLumiere": 50
+      },
+      "branche": {
+        "pixels": 5246,
+        "median": "#a08164",
+        "sombre": "#4c3a2a",
+        "clair": "#c3c3c5",
+        "ecartDeLumiere": 134
+      },
+      "lateriteNue": {
+        "pixels": 20553,
+        "median": "#875a34",
+        "sombre": "#774c27",
+        "clair": "#956941",
+        "ecartDeLumiere": 28
+      },
+      "herbeSeche": {
+        "pixels": 26195,
+        "median": "#664c29",
+        "sombre": "#573f1e",
+        "clair": "#765a36",
+        "ecartDeLumiere": 27
+      },
+      "cielHaut": {
+        "pixels": 49920,
+        "median": "#b7bcc5",
+        "sombre": "#aeb4be",
+        "clair": "#bcc0ca",
+        "ecartDeLumiere": 12
+      },
+      "cielBas": {
+        "pixels": 33024,
+        "median": "#a8b1bd",
+        "sombre": "#a0a9b4",
+        "clair": "#adb6c2",
+        "ecartDeLumiere": 13
+      }
+    },
+    "ecorce-selous-1.jpg": {
+      "taille": "1920x2560",
+      "ecorceLumiere": {
+        "pixels": 96571,
+        "median": "#655752",
+        "sombre": "#41342d",
+        "clair": "#b0a19d",
+        "ecartDeLumiere": 110
+      },
+      "ecorceOmbre": {
+        "pixels": 89391,
+        "median": "#706969",
+        "sombre": "#4b4444",
+        "clair": "#989293",
+        "ecartDeLumiere": 78
+      },
+      "ecorcePliSombre": {
+        "pixels": 23639,
+        "median": "#3c3837",
+        "sombre": "#2e2b2a",
+        "clair": "#524a49",
+        "ecartDeLumiere": 32
+      }
+    },
+    "colatier.jpg": {
+      "taille": "1920x1278",
+      "feuillageLumiere": {
+        "pixels": 47972,
+        "median": "#35461f",
+        "sombre": "#1d290a",
+        "clair": "#6e7e5a",
+        "ecartDeLumiere": 83
+      },
+      "feuillageOmbre": {
+        "pixels": 44654,
+        "median": "#253818",
+        "sombre": "#0b1605",
+        "clair": "#739557",
+        "ecartDeLumiere": 118
+      }
+    }
+  },
+  "proportions": {
+    "fichier": "baobab-senegal.jpg",
+    "taille": "1920x1440",
+    "lecture": "Lectures faites a l oeil sur grille-tronc.jpg, un recadrage de baobab-senegal.jpg grossi deux fois et quadrille tous les 25 pixels. Coordonnees en pixels de la photographie d origine, 1920x1440. Precision de lecture : huit pixels.",
+    "pixels": {
+      "sommet": 56,
+      "sol": 1130,
+      "hauteurArbre": 1074,
+      "envergure": 1313,
+      "futAuPied": 179
+    },
+    "envergureSurHauteur": 1.223,
+    "futAuPiedSurHauteur": 0.167,
+    "conicite": 0.946,
+    "premiereBrancheSurHauteur": 0.237,
+    "divisionDuFutSurHauteur": 0.493,
+    "profilDuFut": [
+      {
+        "hauteur": 0.48,
+        "largeur": 0.158
+      },
+      {
+        "hauteur": 0.41,
+        "largeur": 0.163
+      },
+      {
+        "hauteur": 0.317,
+        "largeur": 0.16
+      },
+      {
+        "hauteur": 0.223,
+        "largeur": 0.158
+      },
+      {
+        "hauteur": 0.084,
+        "largeur": 0.158
+      },
+      {
+        "hauteur": 0.014,
+        "largeur": 0.167
+      }
+    ]
+  },
+  "ecorce": {
+    "plis": {
+      "largeurDeLigne": 692,
+      "grainPixels": 6,
+      "pliLargePixels": 45,
+      "plisSurLaLigne": 15.38,
+      "grainsParPli": 7.5
+    }
+  }
+}
