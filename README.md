@@ -19,7 +19,9 @@ npm run dev
 
 La page s'ouvre sur **http://localhost:5177**. Glissez pour faire le tour de
 l'arbre, molette ou deux doigts pour approcher, touchez un visage, une branche
-ou une ligne de la légende pour ouvrir la fiche.
+ou une ligne de la liste pour ouvrir la fiche. La liste des personnes est
+repliée derrière le bouton en haut à droite : l'arbre est le sujet, la liste
+est un recours. Échap referme ce qui est ouvert.
 
 Pour voir la version construite, celle qu'on met en ligne :
 
@@ -96,8 +98,9 @@ une recette qui se calcule au chargement.
 Sur l'arbre il n'y a que des ronds. Trente-trois pancartes portant chacune un
 nom, deux dates et un conjoint couvraient la moitié de la couronne : on ne
 voyait plus l'arbre, on voyait des pancartes. Le nom sort en infobulle au
-survol, il est lu par un lecteur d'écran, et tout est écrit dans la légende à
-droite, une ligne par personne, décalée selon la génération.
+survol, il est lu par un lecteur d'écran, et tout est écrit dans la liste
+repliée derrière le bouton en haut à droite, une ligne par personne, décalée
+selon la génération.
 
 Les visages ne sont pas dans la scène, ce sont des éléments du document : ils
 restent nets à tout zoom et ne coûtent aucun appel de dessin.
@@ -106,14 +109,36 @@ restent nets à tout zoom et ne coûtent aucun appel de dessin.
 
 Des nuages qui dérivent, un vol d'oiseaux, des papillons au-dessus de l'herbe,
 un mouton qui marche. Quatre géométries montées à la main, aucun fichier 3D.
-Les quatre cadences viennent de mesures publiées :
+
+Les cadences viennent de mesures publiées :
 
 | | cadence | source |
 |---|---|---|
 | nuage | 2,5 unités/s | le cumulus dérive à 5 à 10 mph selon la NOAA, soit 2,2 à 4,5 m/s |
 | oiseau | 7,6 battements/s | fréquence mesurée en vol libre pour les oiseaux qui alternent battements et plané |
-| papillon | 6 battements/s | mesuré sur *Pieris napi* |
+| papillon | 6 battements/s, 1,45 unité/s | mesurés sur *Pieris*, formes de printemps et d'été |
 | mouton | 1,1 unité/s | allure confortable relevée sur tapis de pression |
+
+Les silhouettes aussi sont relevées, et c'est ce qui manquait : deux triangles
+plats ne font ni un oiseau ni un papillon, quelle que soit la cadence à
+laquelle ils battent.
+
+| | forme | source |
+|---|---|---|
+| oiseau | allongement d'aile 8, corps 0,41 envergure | la valeur donnée pour les laridés, contre 15 chez l'albatros et 4,5 à 6 chez un passereau |
+| papillon | allongement d'aile antérieure 1,77 | mesuré sur les formes printanières de *Pieris* |
+
+L'aile de l'oiseau plie au poignet et non à l'épaule : relevée d'un bloc, elle
+donnait un arc régulier et l'oiseau se lisait comme un boomerang. Le papillon,
+lui, se tourne vers l'œil. Posé à plat comme l'oiseau, il était vu depuis une
+caméra qui se tient dix-huit degrés au-dessus de lui, donc écrasé à trois
+dixièmes dans le sens de la marche : il ne restait qu'une fléchette orange.
+
+Les deux sont à l'échelle du regard et non à celle de la nature. L'oiseau fait
+2,7 à 3,5 unités d'envergure, le double d'un goéland ; le papillon 1,24, soit
+vingt-cinq fois nature. Les proportions, elles, sont justes. Sa livrée est
+celle du petit monarque, *Danaus chrysippus*, qui vole au Bénin : le blanc
+crème de la piéride se perdait sur l'herbe pâle de midi.
 
 Une unité de scène vaut un mètre : l'arbre fait dix mètres, l'herbe vingt
 centimètres, le plat s'étend sur cent mètres.
@@ -187,8 +212,13 @@ avoir fini.
 
 | | image | triangles | appels |
 |---|---|---|---|
-| pleine résolution | 68,1 ms | 546 944 | 11 |
-| au plancher du gardien | 35,9 ms | | |
+| pleine résolution | 64,0 à 68,6 ms | 549 006 | 12 |
+| au plancher du gardien | 36,4 à 47,4 ms | | |
+
+Trois passages de suite sur la même carte, le même code. La pleine résolution
+tient dans cinq millisecondes ; le plancher, lui, monte à chaque passage, ce qui
+ressemble à une carte qui chauffe et non à une scène qui pèse plus. Le chiffre
+bas est celui du premier passage, carte froide ; il n'a pas été repris au calme.
 
 Le gardien de cadence mesure le vrai coût d'une image sur dix. Au-dessus de
 seize millisecondes il baisse la résolution par paliers jusqu'à trois
@@ -206,12 +236,12 @@ Deux mesures qui ont changé le code plus que n'importe quel raisonnement :
 
 ## Ce qui reste
 
-- 35,9 ms au plancher du gardien, soit vingt-huit images par seconde, au-dessus
+- 36,4 à 47,4 ms au plancher du gardien, soit vingt à vingt-sept images par seconde, au-dessus
   du seuil de vingt millisecondes que la maison se fixe. Le banc le dit et ne le
-  cache pas. Le prochain levier serait le feuillage, seize mille cartes en
-  découpe alpha, qui n'a pas encore été mesuré seul.
+  cache pas. Le prochain levier serait le feuillage, près de dix-sept mille
+  cartes en découpe alpha, qui n'a pas encore été mesuré seul.
 - `ANATOMIE.md` décrit le relevé du baobab, qui commandait la silhouette avant
   que l'arbre ne soit refait à fourches. Ce qu'il dit de l'écorce reste vrai, ce
   qu'il dit du fût et de la couronne ne l'est plus.
-- Le mouton traverse la prairie à vingt-six unités du fût : selon l'angle, il
-  passe derrière l'arbre et on ne le voit pas de la vue de départ.
+- Le mouton traverse la prairie à quinze unités du fût, là où elle est vide ;
+  à vingt-six il passait derrière l'arbre une fois sur deux.

@@ -46,6 +46,11 @@ export const TEINTES = {
   cielBas: loin.cielBas.median,
   feuillageOmbre: feuille.feuillageOmbre.median,
   feuillageLumiere: feuille.feuillageLumiere.median,
+  /** La bande claire du releve, celle des feuilles que le soleil traverse.
+      Elle etait dans le fichier depuis le debut et n a jamais servi : le code
+      partait de la mediane et la tirait vers le blanc, ce qui monte la clarte
+      en retirant le vert. La couronne sortait kaki. */
+  feuillageAuSoleil: feuille.feuillageOmbre.clair,
 }
 
 /** Le temps et la selection sont partages par toutes les matieres : un seul
@@ -291,8 +296,17 @@ export function ecorce(): MeshStandardMaterial {
  * et aucune des photographies du dossier ne le montre.
  */
 export function feuillage(): MeshLambertMaterial {
-  const clair = couleur(TEINTES.feuillageLumiere).lerp(couleur('#ffffff'), 0.12)
-  const sombre = couleur(TEINTES.feuillageOmbre).lerp(couleur('#ffffff'), 0.05)
+  // Les deux bouts de l ecart de lumiere du releve, et rien entre les deux
+  // qui ne soit mesure : la bande claire des feuilles traversees par le soleil
+  // pour le dessus, la mediane de l ombre pour le dessous. La photographie
+  // donne 118 points d ecart sur les memes feuilles, et c est cet ecart-la
+  // qu il faut rendre.
+  //
+  // Le code tirait la mediane vers le blanc pour eclaircir. Un melange avec du
+  // blanc monte la clarte en retirant la saturation : la couronne sortait
+  // kaki, et le vert du releve avait disparu en route.
+  const clair = couleur(TEINTES.feuillageAuSoleil)
+  const sombre = couleur(TEINTES.feuillageOmbre)
 
   // Lambert et non l eclairage physique : une feuille mate n a aucun reflet a
   // calculer, et c est la matiere qui se recouvre le plus a l ecran. Le banc
@@ -315,9 +329,11 @@ export function feuillage(): MeshLambertMaterial {
         /* glsl */ `
         #include <common>
         attribute float aTirage;
+        attribute float aHaut;
         uniform float uTemps;
         uniform float uVent;
         varying float vTirage;
+        varying float vHaut;
         ${VENT}
         `,
       )
@@ -326,6 +342,7 @@ export function feuillage(): MeshLambertMaterial {
         /* glsl */ `
         #include <begin_vertex>
         ${VENT_DES_FEUILLES}
+        vHaut = aHaut;
         `,
       )
 
@@ -336,13 +353,24 @@ export function feuillage(): MeshLambertMaterial {
         #include <common>
         uniform vec3 uSombre;
         varying float vTirage;
+        varying float vHaut;
         `,
       )
       .replace(
         '#include <alphatest_fragment>',
         /* glsl */ `
         ${DECOUPE}
-        diffuseColor.rgb = mix(diffuseColor.rgb, uSombre, fract(vTirage * 7.3));
+        // Un houppier a un dessus et un dessous.
+        //
+        // La teinte se tirait au hasard carte par carte, sur toute l amplitude
+        // du clair au sombre : la couronne sortait mouchetee, sans volume, et
+        // se lisait comme une tache verte posee sur l arbre. Elle se prend
+        // maintenant sur la place de la carte dans la couronne, du pied de
+        // houppier a la cime, et le tirage ne fait plus que la variation d une
+        // feuille a l autre.
+        float dessous = 1.0 - smoothstep(0.12, 0.92, vHaut);
+        float melange = clamp(dessous * 0.86 + (fract(vTirage * 7.3) - 0.5) * 0.34, 0.0, 1.0);
+        diffuseColor.rgb = mix(diffuseColor.rgb, uSombre, melange);
         #include <alphatest_fragment>
         `,
       )

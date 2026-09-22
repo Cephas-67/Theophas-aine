@@ -277,13 +277,31 @@ export function cadrerLArbre(vue: Vue, boite: Box3): void {
   // faut de la place au-dessus de la couronne pour le ciel, et en dessous pour
   // que la prairie et la ligne d horizon entrent dans l image. Un arbre cale
   // contre le bord haut du cadre perd le paysage qu on vient de monter.
-  // La marge en hauteur est plus large sur un ecran etroit : le bandeau de
-  // legende y prend le tiers bas de l ecran, et sans ce recul le pied du fut
-  // passait derriere lui.
+  // La marge en hauteur n est plus elargie sur un ecran etroit : la liste des
+  // personnes y prenait le bas de l ecran en permanence, il fallait reculer
+  // pour que le pied du fut ne passe pas derriere. Elle est maintenant repliee
+  // derriere son bouton, et le bas de l ecran est a l arbre.
+  // Sur un telephone tenu droit, la couronne deborde et c est voulu.
+  //
+  // Faire tenir sa largeur entiere dans trois cent quatre-vingt-dix pixels
+  // demande soixante-cinq unites de recul : l arbre y fait alors un tiers de
+  // la hauteur de l ecran, les trente-trois visages se tassent en une grappe
+  // ou plus personne ne se distingue, et les deux tiers restants sont du ciel
+  // et de l herbe vides. On recadre plutot que de rapetisser : la marge en
+  // largeur passe sous un, la couronne sort du cadre par les cotes, et les
+  // visages retrouvent leur taille. Ce qui deborde, ce sont des feuilles.
   const etroit = vue.camera.aspect < 1
-  const pourLaLargeur = (demiLarge * 1.16) / Math.tan(demiLargeur)
-  const pourLaHauteur = (demiHaut * (etroit ? 1.85 : 1.30)) / Math.tan(demiHauteur)
-  const recul = Math.min(vue.gestes.maxDistance, Math.max(pourLaLargeur, pourLaHauteur))
+  const pourLaLargeur = (demiLarge * (etroit ? 0.84 : 1.16)) / Math.tan(demiLargeur)
+  const pourLaHauteur = (demiHaut * 1.30) / Math.tan(demiHauteur)
+  const voulu = Math.max(pourLaLargeur, pourLaHauteur)
+  // La butee de recul suit le cadrage au lieu de le contrarier.
+  //
+  // Elle valait cinq fois la hauteur nominale, soit cinquante unites, et sur un
+  // telephone tenu droit le cadrage en demandait soixante-cinq : la couronne
+  // sortait du cadre des trois cotes et personne ne pouvait reculer pour la
+  // voir. Le plafond est donc pose au-dessus de ce que le cadrage demande.
+  vue.gestes.maxDistance = Math.max(vue.gestes.maxDistance, voulu * 1.25)
+  const recul = Math.min(vue.gestes.maxDistance, voulu)
   // Une vue basse, presque a hauteur d homme, comme celle de la source.
   //
   // C est le reglage qui decide si la prairie existe. Mesure sur capture :

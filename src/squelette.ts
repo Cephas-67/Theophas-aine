@@ -242,7 +242,11 @@ function fourcher(
       // plie, une maitresse ne bouge pas.
       souplesse: Math.min(1, 0.35 + etage * 0.18),
       bout: new Vector3(),
-      feuillu: etage >= ETAGES.length - 2,
+      // Trois etages de feuilles et non deux : a deux, le houppier tenait tout
+      // entier au-dessus de la derniere fourche, et se lisait comme un nuage
+      // vert pose sur un arbre nu. Un etage de plus le fait descendre jusque
+      // dans la couronne, sans toucher les branches qui portent quelqu un.
+      feuillu: etage >= ETAGES.length - 3,
     }
     brin.bout = brin.ligne[brin.ligne.length - 1].clone()
     segments.push(brin)

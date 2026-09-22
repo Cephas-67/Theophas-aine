@@ -12,7 +12,7 @@ import { ecorce, feuillage, ombreDesFeuilles, partages } from './matieres'
 import { compterLeFeuillage, fabriquerLeFeuillage } from './feuillage'
 import { monterLeVivant } from './vivant'
 import { poserLesEtiquettes, trierParDistance } from './etiquettes'
-import { annees, aPlat, generationDe, SOUCHE, type Personne } from './genealogie'
+import { annees, aPlat, generationDe, type Personne } from './genealogie'
 
 const toile = document.getElementById('arbre') as HTMLCanvasElement
 const contenant = document.getElementById('scene') as HTMLElement
@@ -48,7 +48,7 @@ vue.scene.add(houppier)
 // Ce qui vit dans le paysage : les nuages qui derivent, un vol d oiseaux, les
 // papillons au-dessus de l herbe, et le mouton qui traverse la prairie. Quatre
 // cadences, quatre mesures publiees, aucune estimee a l oeil.
-const vivant = monterLeVivant(vue.scene)
+const vivant = monterLeVivant(vue.scene, vue.camera.position)
 
 // Le cadrage vient apres le bois : il se prend sur la boite que l arbre occupe
 // pour de vrai, pas sur la hauteur nominale de la recette.
@@ -162,12 +162,15 @@ toile.addEventListener('pointerup', (e) => {
   if (id !== '') choisir(id)
 })
 
-document.getElementById('fermer-fiche')?.addEventListener('click', () => {
+function fermerLaFiche(): void {
   fiche.hidden = true
   choisie = ''
   partages.uSelection.value = -1
   for (const etiquette of plaques.liste) etiquette.element.classList.remove('plaque-choisie')
-})
+  for (const ligne of lignesDeLegende.values()) ligne.setAttribute('aria-current', 'false')
+}
+
+document.getElementById('fermer-fiche')?.addEventListener('click', fermerLaFiche)
 
 // Ce qui bouge tout seul se coupe : le vent s arrete si la personne a demande
 // moins de mouvement, et la boucle entiere s arrete si l arbre n est pas a
@@ -260,16 +263,53 @@ for (const personne of aPlat()) {
   textes.appendChild(recit)
   bouton.appendChild(textes)
 
-  bouton.addEventListener('click', () => choisir(personne.id))
+  bouton.addEventListener('click', () => {
+    choisir(personne.id)
+    // Sur telephone la liste couvre la moitie basse de l ecran : elle se
+    // referme des qu on a choisi, sinon on choisit quelqu un sans le voir.
+    if (vue.serre) ouvrirLaListe(false)
+  })
   ligne.appendChild(bouton)
   liste.appendChild(ligne)
   lignesDeLegende.set(personne.id, bouton)
 }
 
-// Sur un grand ecran la fiche de la souche s ouvre d office, a cote de
-// l arbre. Sur un telephone elle couvrirait le tiers bas de l arbre : on la
-// garde pour le premier toucher.
-if (!vue.serre) choisir(SOUCHE.id, false)
+/**
+ * Le bouton de la liste.
+ *
+ * Le panneau etait ouvert d office et prenait un tiers de l ecran en largeur,
+ * le bas entier sur telephone. Ferme, il ne reste qu un bouton, et l ecran
+ * n a plus que l arbre, son titre et de quoi ouvrir la liste.
+ */
+const boutonDeLaListe = document.getElementById('ouvrir-legende') as HTMLButtonElement
+const panneauDeLaListe = document.getElementById('legende') as HTMLElement
+
+function ouvrirLaListe(ouverte: boolean): void {
+  boutonDeLaListe.setAttribute('aria-expanded', ouverte ? 'true' : 'false')
+  panneauDeLaListe.dataset.ouvert = ouverte ? 'oui' : 'non'
+}
+
+ouvrirLaListe(false)
+boutonDeLaListe.addEventListener('click', () => {
+  ouvrirLaListe(boutonDeLaListe.getAttribute('aria-expanded') !== 'true')
+})
+
+// Echap ferme ce qui est ouvert, en commencant par le dernier ouvert : la
+// liste, puis la fiche. C est l ordre auquel on s attend quand on empile deux
+// panneaux.
+window.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return
+  if (boutonDeLaListe.getAttribute('aria-expanded') === 'true') {
+    ouvrirLaListe(false)
+    boutonDeLaListe.focus()
+    return
+  }
+  if (!fiche.hidden) fermerLaFiche()
+})
+
+// La fiche de la souche ne s ouvre plus d office : elle montrait le nom de
+// Theophas sur une carte au depart, ce qui est exactement la carte dont on ne
+// voulait plus. Elle s ouvre quand on touche quelqu un.
 
 // Ce que la scene coute, lu par le banc. Les nombres sortent du modele
 // lui-meme : un chiffre affiche ailleurs viendrait d ici.

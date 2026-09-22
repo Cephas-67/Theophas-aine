@@ -24,8 +24,23 @@
 
       <!-- La legende : une ligne par personne, son visage, son nom et ce qu on
            raconte d elle. C est la table des matieres de l arbre, et c est la
-           qu on retrouve quelqu un qu on ne sait pas situer sur une branche. -->
-      <aside class="legende verre" aria-label="Les personnes de l arbre">
+           qu on retrouve quelqu un qu on ne sait pas situer sur une branche.
+
+           Elle est repliee au depart, derriere son bouton. Ouverte d office,
+           elle prenait un tiers de l ecran en largeur et tout le bas sur
+           telephone : l arbre est le sujet, la liste est un recours. -->
+      <button
+        id="ouvrir-legende"
+        class="menu verre"
+        type="button"
+        aria-expanded="false"
+        aria-controls="legende"
+      >
+        <span class="menu-barres" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="menu-mot">Les personnes</span>
+      </button>
+
+      <aside id="legende" class="legende verre" aria-label="Les personnes de l arbre">
         <ul id="legende-liste" class="legende-liste"></ul>
       </aside>
     </main>
